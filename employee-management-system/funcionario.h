@@ -14,6 +14,7 @@ void lst_libera(FuncionariosList* l);
 
 /* funções de manipulação */
 FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id);
+FuncionariosList*  obter_funcionarios(FuncionariosList *f_list);
 FuncionariosList* lst_retira(FuncionariosList* f_list, int id);
 FuncionariosList* lst_busca(FuncionariosList* f_list, int id) ;
 void lst_imprime(FuncionariosList* f_list);
