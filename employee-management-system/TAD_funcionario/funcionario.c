@@ -5,6 +5,12 @@
 #include "funcionario.h"
 #define TAM_LINHA 100
 
+/* estrutura do tipo union para o documento (RG/CPF) */
+union documento {
+  char CPF[20];
+  char RG[20];
+};
+
 /* estrutura do tipo Funcionario */
 struct data {
    int dia;
@@ -14,6 +20,7 @@ struct data {
 
 /* estrutura do tipo Funcionario */
 struct funcionario {
+    Documento cpf_rg;
     Data *data_de_contratacao;
     char name[50];
     int id;
@@ -32,11 +39,12 @@ FuncionariosList* lst_cria(void) {
 }
 
 /* inserção no início: retorna a lista atualizada */
-FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data *data) {
+FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data *data, char *documento) {
     FuncionariosList* novo = (FuncionariosList*) malloc(sizeof(FuncionariosList));   
     strcpy(novo->info.name, nome);
     novo->info.id = id;
     novo->info.data_de_contratacao = data;
+    strcpy(novo->info.cpf_rg.CPF, documento);
 
     /* Adiciona o novo nó da lista */
     novo->next = f_list;
@@ -47,7 +55,7 @@ FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data 
 FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
     FILE *arquivo_origem;
     FuncionariosList *new_list = f_list;
-    char linha[TAM_LINHA], nome[50];
+    char linha[TAM_LINHA], nome[50], documento[20];
     int id, dia, mes , ano ;
 
     // lendo arquivo com as informacoes dos funcionarios
@@ -57,15 +65,17 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         exit(1);
     }
     while (fgets(linha, TAM_LINHA, arquivo_origem) != NULL) { 
-        sscanf(linha, " %[^;];%d;%d/%d/%d", nome, &id, &dia, &mes, &ano); // resgata as informações do arquivo
+        sscanf(linha, " %[^;];%d;%d/%d/%d;%[^\n]", nome, &id, &dia, &mes, &ano, documento); // resgata as informações do arquivo
         Data *data_contratacao = get_data(); 
         data_contratacao->dia = dia;
         data_contratacao->mes = mes;
         data_contratacao->ano = ano;
 
+        printf("DOCUMENO: %s\n", documento);
+
         //printf("DATA: %d/%d/%d\n", data_contratacao.tm_mday, data_contratacao.tm_mon,  data_contratacao.tm_year );
         
-        new_list = lst_insere(new_list, nome, id, data_contratacao);
+        new_list = lst_insere(new_list, nome, id, data_contratacao, documento);
     }
     fclose(arquivo_origem); // fecha o arquivo
 
@@ -79,7 +89,8 @@ void lst_imprime(FuncionariosList* f_list) {
         printf("ID: %d | Nome: %s ", p->info.id, p->info.name);    
         printf("| Data da contratacao: %d/", p->info.data_de_contratacao->dia); // imprime dia
         printf("%d/", p->info.data_de_contratacao->mes); // imprime mês
-        printf("%d\n", p->info.data_de_contratacao->ano); // imprime ano
+        printf("%d", p->info.data_de_contratacao->ano); // imprime ano
+        printf(" | RG/CPF: %s\n", p->info.cpf_rg.CPF); // imprime Documento
     }
 }
 
@@ -177,10 +188,11 @@ void atualiza_arquivo(FuncionariosList* f_list) {
         exit(1);
     }   
     for (p = f_list; p != NULL; p = p->next) {
-        fprintf(arquivo, "%s;%d;", p->info.name, p->info.id);    
-        fprintf(arquivo, "%d/", p->info.data_de_contratacao->dia); // imprime dia
-        fprintf(arquivo, "%d/", p->info.data_de_contratacao->mes); // imprime mês
-        fprintf(arquivo, "%d\n", p->info.data_de_contratacao->ano); // imprime ano
+        fprintf(arquivo, "%s;%d;", p->info.name, p->info.id); // imprime o nome e o id do funcionario no banco de dados
+        fprintf(arquivo, "%d/", p->info.data_de_contratacao->dia); // imprime a Data no banco de dados
+        fprintf(arquivo, "%d/", p->info.data_de_contratacao->mes);
+        fprintf(arquivo, "%d;", p->info.data_de_contratacao->ano);
+        fprintf(arquivo, "%s\n", p->info.cpf_rg.CPF); // imprime Documento no banco de dados
     }
     
     fclose(arquivo); // Fecha o arquivo
