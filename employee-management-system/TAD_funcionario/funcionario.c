@@ -127,6 +127,7 @@ FuncionariosList* lst_retira(FuncionariosList* f_list, int id) {
     }
 
     free(p);
+    atualiza_arquivo(f_list);
     return f_list;
 }
 
@@ -164,5 +165,25 @@ Data *get_data(void) {
     data->ano = data_hora_atual->tm_year+1900;
 
     return data;
+}
+
+void atualiza_arquivo(FuncionariosList* f_list) {
+    FuncionariosList* p; /* variável auxiliar para percorrer a lista */
+    FILE *arquivo;
+    arquivo = fopen("TAD_funcionario/dados_funcionarios.txt", "w"); // Abre o arquivo para escrita
+
+    if (arquivo == NULL) {
+        printf("Erro ao abrir o arquivo!\n");
+        exit(1);
+    }   
+    for (p = f_list; p != NULL; p = p->next) {
+        fprintf(arquivo, "%s;%d;", p->info.name, p->info.id);    
+        fprintf(arquivo, "%d/", p->info.data_de_contratacao->dia); // imprime dia
+        fprintf(arquivo, "%d/", p->info.data_de_contratacao->mes); // imprime mês
+        fprintf(arquivo, "%d\n", p->info.data_de_contratacao->ano); // imprime ano
+    }
+    
+    fclose(arquivo); // Fecha o arquivo
+    printf("Arquivo atualizado!\n");
 }
 

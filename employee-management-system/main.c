@@ -7,7 +7,10 @@ int main (void) {
     f_list = lst_cria();
     f_list = obter_funcionarios(f_list);
     Data* data = get_data();
-    f_list = lst_insere(f_list, "Victor Emanuel", 4, data);
+    f_list = lst_insere(f_list, "Joaquim Correa", 5, data);
     lst_imprime(f_list);
+    lst_retira(f_list, 3);
+    lst_imprime(f_list);
+    atualiza_arquivo(f_list);
     return 0;
 } 

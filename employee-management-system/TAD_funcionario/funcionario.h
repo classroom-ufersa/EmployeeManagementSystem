@@ -19,5 +19,6 @@ FuncionariosList* lst_busca(FuncionariosList* f_list, int id) ;
 void lst_imprime(FuncionariosList* f_list);
 int lst_vazia(FuncionariosList* f_list);
 Data *get_data(void);
+void atualiza_arquivo(FuncionariosList* f_list);
 
 #endif
