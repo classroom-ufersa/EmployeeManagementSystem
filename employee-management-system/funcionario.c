@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h> //necessário para usar localtime() e struct tm
 #include "funcionario.h"
+#define TAM_LINHA 100
 
 /* estrutura do tipo Funcionario */
 struct funcionario {
@@ -33,6 +34,38 @@ FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id) {
     novo->next = f_list;
     return novo;
 }
+
+/* Função que resgata os funcionários arquivados +++++ */
+/* FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
+    FILE *arquivo_origem;
+    FuncionariosList *new_list = f_list;
+    char linha[TAM_LINHA], nome[50];
+    int id, dia = 0, mes = 0, ano = 0;
+
+    // lendo arquivo com as informacoes dos funcionarios
+    arquivo_origem = fopen("TAD_funcionario/dados_funcionarios.txt", "r"); // abre o arquivo_origem para leitura
+    if (arquivo_origem == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        exit(1);
+    }
+    while (fgets(linha, TAM_LINHA, arquivo_origem) != NULL) {
+        FuncionariosList* novo = (FuncionariosList*) malloc(sizeof(FuncionariosList));   
+        sscanf(linha, " %[^;];%d;%d/%d/%d", nome, &id, &dia, &mes, &ano); // resgata as informações do arquivo
+        strcpy(novo->info.name, nome);
+        novo->info.id = id;
+
+        Data *data_contratacao;
+        data_contratacao->tm_mday = dia;
+        data_contratacao->tm_mon = mes;
+        data_contratacao->tm_year = ano;
+        novo->info.data_de_contratacao = data_contratacao;
+        // Adiciona o novo nó da lista 
+        novo->next = new_list;
+    }
+    fclose(arquivo_origem); // fecha o arquivo
+
+    return new_list;
+}*/
 
 /* função imprime:  imprime valores dos elementos */
 void lst_imprime(FuncionariosList* f_list) {
@@ -121,3 +154,5 @@ Data *pega_data_atual() {
     
     return data_hora_atual;
 }
+
+
