@@ -17,6 +17,7 @@ struct funcionario {
     Data *data_de_contratacao;
     char name[50];
     int id;
+    char cargo[50];
 };
 
 /* Struct que representa o nó da lista */
