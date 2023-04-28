@@ -1,10 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h> //necessário para usar localtime() e struct tm
 #include "funcionario.h"
 
 /* estrutura do tipo Funcionario */
 struct funcionario {
+    Data *data_de_contratacao;
     char name[50];
     int id;
 };
@@ -12,7 +14,7 @@ struct funcionario {
 /* Struct que representa o nó da lista */
 struct funcionarioslist {
     Funcionario info;
-    struct list *next;
+    struct funcionarioslist *next;
 };
 
 /* função de criação: retorna uma lista vazia */ 
@@ -25,6 +27,9 @@ FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id) {
     FuncionariosList* novo = (FuncionariosList*) malloc(sizeof(FuncionariosList));   
     strcpy(novo->info.name, nome);
     novo->info.id = id;
+    novo->info.data_de_contratacao = pega_data_atual();
+
+    /* Adiciona o novo nó da lista */
     novo->next = f_list;
     return novo;
 }
@@ -32,8 +37,12 @@ FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id) {
 /* função imprime:  imprime valores dos elementos */
 void lst_imprime(FuncionariosList* f_list) {
     FuncionariosList* p; /* variável auxiliar para percorrer a lista */
-    for (p = f_list; p != NULL; p = p->next)
-        printf("ID: %d | Nome: %s\n", p->info.id, p->info.name);    
+    for (p = f_list; p != NULL; p = p->next) {
+        printf("ID: %d | Nome: %s ", p->info.id, p->info.name);    
+        printf("| Data da contratacao: %d/", p->info.data_de_contratacao->tm_mday); // imprime dia
+        printf("%d/", p->info.data_de_contratacao->tm_mon+1); // imprime mês
+        printf("%d\n\n", p->info.data_de_contratacao->tm_year+1900); // imprime ano
+    }
 }
 
 /* função vazia: retorna 1 se vazia ou 0 se não vazia */
@@ -94,4 +103,21 @@ void lst_libera(FuncionariosList* f_list) {
         /* faz p apontar para o próximo */
         p = t;
     }
+}
+
+Data *pega_data_atual() { 
+    //ponteiro para struct que armazena data e hora  
+    Data *data_hora_atual;     
+    
+    //variável do tipo time_t para armazenar o tempo em segundos  
+    time_t segundos;
+    
+    //obtendo o tempo em segundos (funcao vinda da time.h) 
+    time(&segundos);   
+    
+    //para converter de segundos para o tempo local  
+    //utilizamos a função localtime  
+    data_hora_atual = localtime(&segundos);
+    
+    return data_hora_atual;
 }
