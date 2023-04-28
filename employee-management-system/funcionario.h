@@ -3,6 +3,8 @@
 #ifndef FUNCIONARIO_H
 #define FUNCIONARIO_H
 
+typedef struct tm Data;
+
 typedef struct funcionario Funcionario;
 typedef struct funcionarioslist FuncionariosList;
 
@@ -16,5 +18,6 @@ FuncionariosList* lst_retira(FuncionariosList* f_list, int id);
 FuncionariosList* lst_busca(FuncionariosList* f_list, int id) ;
 void lst_imprime(FuncionariosList* f_list);
 int lst_vazia(FuncionariosList* f_list);
+Data *pega_data_atual(void);
 
 #endif
