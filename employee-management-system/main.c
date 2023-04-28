@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "TAD_funcionario/funcionario.h"
+#include "TAD_funcionario/funcionario.c"
 
 int main (void) {
     FuncionariosList* f_list;
