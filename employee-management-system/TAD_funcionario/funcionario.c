@@ -5,53 +5,57 @@
 #include "funcionario.h"
 #define TAM_LINHA 100
 
-/* estrutura do tipo union para o documento (RG/CPF) */
 union documento {
   char CPF[20];
   char RG[20];
 };
 
-/* estrutura do tipo Funcionario */
 struct data {
    int dia;
    int mes;
    int ano;
 };
 
-/* estrutura do tipo Funcionario */
 struct funcionario {
     Documento cpf_rg;
     Data *data_de_contratacao;
     char name[50];
     int id;
-    char cargo[50];
+    char cargo[50]; // OBS: susbtituir pelo tipo estruturado Cargo
 };
 
-/* Struct que representa o nó da lista */
 struct funcionarioslist {
     Funcionario info;
     struct funcionarioslist *next;
+    struct funcionarioslist *prev;
 };
 
-/* função de criação: retorna uma lista vazia */ 
 FuncionariosList* lst_cria(void) {
     return NULL;
 }
 
-/* inserção no início: retorna a lista atualizada */
+// Inserção no início: retorna a lista atualizada
 FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data *data, char *documento) {
     FuncionariosList* novo = (FuncionariosList*) malloc(sizeof(FuncionariosList));   
+    
+    // inserindo as informações passadas pelo usuário
     strcpy(novo->info.name, nome);
     novo->info.id = id;
     novo->info.data_de_contratacao = data;
     strcpy(novo->info.cpf_rg.CPF, documento);
 
-    /* Adiciona o novo nó da lista */
+    // adicionando de fato o nó na lista
     novo->next = f_list;
+    novo->prev = NULL;
+    // verifica se a lista não está vazia
+    if (f_list != NULL)
+        f_list->prev = novo;
+    
+    // atualiza_arquivo(novo);
     return novo;
 }
 
-/* Função que resgata os funcionários arquivados +++++ */
+// Função que resgata os funcionários arquivados e salva na lista
 FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
     FILE *arquivo_origem;
     FuncionariosList *new_list = f_list;
@@ -70,31 +74,32 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         data_contratacao->dia = dia;
         data_contratacao->mes = mes;
         data_contratacao->ano = ano;
-
-        printf("DOCUMENO: %s\n", documento);
-
-        //printf("DATA: %d/%d/%d\n", data_contratacao.tm_mday, data_contratacao.tm_mon,  data_contratacao.tm_year );
-        
+                     
         new_list = lst_insere(new_list, nome, id, data_contratacao, documento);
     }
-    fclose(arquivo_origem); // fecha o arquivo
 
+    fclose(arquivo_origem); // fecha o arquivo
     return new_list;
 }
 
-/* função imprime:  imprime valores dos elementos */
+// Função imprime:  imprime valores dos elementos
 void lst_imprime(FuncionariosList* f_list) {
-    FuncionariosList* p; /* variável auxiliar para percorrer a lista */
-    for (p = f_list; p != NULL; p = p->next) {
-        printf("ID: %d | Nome: %s ", p->info.id, p->info.name);    
-        printf("| Data da contratacao: %d/", p->info.data_de_contratacao->dia); // imprime dia
-        printf("%d/", p->info.data_de_contratacao->mes); // imprime mês
-        printf("%d", p->info.data_de_contratacao->ano); // imprime ano
-        printf(" | RG/CPF: %s\n", p->info.cpf_rg.CPF); // imprime Documento
+    if (lst_vazia(f_list)) {
+        printf("Nenhum funcionário encontrado no Sistema!\n");
+        printf("Por favor, tente adicionar algum funcionário antes de exibi-los.\n");
+    } else{
+        FuncionariosList* p;
+        for (p = f_list; p != NULL; p = p->next) {
+            printf("ID: %d | Nome: %s ", p->info.id, p->info.name);    
+            printf("| Data da contratacao: %d/", p->info.data_de_contratacao->dia); // imprime dia
+            printf("%d/", p->info.data_de_contratacao->mes); // imprime mês
+            printf("%d", p->info.data_de_contratacao->ano); // imprime ano
+            printf(" | RG/CPF: %s\n", p->info.cpf_rg.CPF); // imprime Documento
+        }
     }
 }
 
-/* função vazia: retorna 1 se vazia ou 0 se não vazia */
+// Função vazia: retorna 1 se vazia ou 0 se não vazia
 int lst_vazia(FuncionariosList* f_list) {
     if (f_list == NULL)
         return 1;
@@ -102,47 +107,46 @@ int lst_vazia(FuncionariosList* f_list) {
         return 0;
 }
 
-/* funcão busca: busca um elemento na lista */
+// Funcão busca: busca um elemento na lista 
 FuncionariosList* lst_busca(FuncionariosList* f_list, int id) {
     FuncionariosList* p;
-    for (p = f_list; p != NULL; p = p->next) {
-        if(p->info.id == id)
-            return p;
+    if (lst_vazia(f_list)) {
+        printf("ERRO: lista vazia!\n");
+        return NULL;
+    } else {
+        for (p = f_list; p != NULL; p = p->next) {
+            if(p->info.id == id) {
+                return p;
+            }
+        }
     }
-    return NULL; /* não achou o elemento buscado */     
+    return NULL; // não achou o elemento buscado     
 }
 
-/* função retira: retira elemento da lista */
+// Função retira: retira elemento da lista
 FuncionariosList* lst_retira(FuncionariosList* f_list, int id) {
-    FuncionariosList* ant = NULL;
-    FuncionariosList* p = f_list;
+    FuncionariosList* p = lst_busca(f_list, id);
 
-    /* procura elemento na lista, guardando anterior */
-    while (p != NULL && p->info.id != id) {
-        ant = p;
-        p = p->next;
-    }
-
-    /* verifica se achou elemento */
+    // verifica se achou elemento
     if (p == NULL) {
-        return f_list; /* não achou: retorna a lista original */
+        printf("Funcionário com ID %d não encontrado no sistema. Por favor, tente novamente.\n", id);
+        return f_list; 
     }
 
-    /* retira elemento */
-    if (ant == NULL) {
-        /* retira elemento do início */
+    // retira elemento do encadeamento
+    if (f_list == p) // testa se é o primeiro elemento
         f_list = p->next;
-    } else {
-        /* retira elemento do meio */
-        ant->next = p->next;
-    }
-
+    else 
+        p->prev->next = p->next;
+    
+    if (p->next != NULL) // testa se é o último elemento
+        p->next->prev = p->prev; 
+    
     free(p);
-    atualiza_arquivo(f_list);
+    // atualiza_arquivo(f_list);
     return f_list;
 }
 
-/* função libera: libera elementos alocados */
 void lst_libera(FuncionariosList* f_list) {
     FuncionariosList* p = f_list;
     while (p != NULL) {

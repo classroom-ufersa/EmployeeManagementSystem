@@ -3,17 +3,27 @@
 #ifndef FUNCIONARIO_H
 #define FUNCIONARIO_H
 
+// --- TIPOS ESTRUTURADOS ---
+// Struct do tipo union para o Documento (RG/CPF)
 typedef union documento Documento;
 
+// Struct do tipo Data
 typedef struct data Data;
+
+// Struct do tipo Funcionario
 typedef struct funcionario Funcionario;
+
+// Struct para o nó da lista
 typedef struct funcionarioslist FuncionariosList;
 
-/* funções de criação e liberação */
+// --- FUNÇÕES DE CRIAÇÃO E LIBERAÇÃO --- 
+// Função de criação: retorna uma lista vazia 
 FuncionariosList* lst_cria(void);
+
+// Função libera: libera elementos alocados
 void lst_libera(FuncionariosList* l);
 
-/* funções de manipulação */
+// FUNÇÕES DE MANIPULAÇÃO
 FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data *data, char *documento);
 FuncionariosList* obter_funcionarios(FuncionariosList *f_list);
 FuncionariosList* lst_retira(FuncionariosList* f_list, int id);
