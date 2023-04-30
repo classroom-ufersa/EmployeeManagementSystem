@@ -33,4 +33,10 @@ int lst_vazia(FuncionariosList* f_list);
 Data *get_data(void);
 void atualiza_arquivo(FuncionariosList* f_list);
 
+// Função que troca os valores de dois nós
+void swapNodes(FuncionariosList *f_list_1, FuncionariosList *f_list_2);
+
+// Função que ordena a lista em ordem alfabetica
+void lst_ordena(FuncionariosList *f_list);
+
 #endif

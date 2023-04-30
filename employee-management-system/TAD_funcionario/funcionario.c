@@ -203,3 +203,26 @@ void atualiza_arquivo(FuncionariosList* f_list) {
     printf("Arquivo atualizado!\n");
 }
 
+void swapNodes(FuncionariosList *f_list_1, FuncionariosList *f_list_2) {
+    Funcionario temp = f_list_1->info;
+    f_list_1->info = f_list_2->info;
+    f_list_2->info = temp;
+}
+
+void lst_ordena(FuncionariosList *f_list) {
+    FuncionariosList *i;
+    FuncionariosList *j;
+    if (lst_vazia(f_list)) {
+        printf("ERRO: lista vazia!\n");
+        exit(1);
+    } else {
+        // ordena os nomes usando bubble sort
+        for (i = f_list; i != NULL; i = i->next) {
+            for (j = i->next; j != NULL; j = j->next) {
+                if (strcmp(i->info.name, j->info.name) > 0) {
+                    swapNodes(i, j);
+                }
+            }
+        }
+    }
+}
