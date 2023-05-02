@@ -17,10 +17,12 @@ int main (void) {
     f_list = lst_cria();
     f_list = obter_funcionarios(f_list);
     lst_imprime(f_list);
-
-    printf("-----------------\n");
+    lst_ordena(f_list);
+    Data *data = get_data();
+    f_list = lst_insere(f_list, "Pedro", 3, data, "123.123.123-01", "Gerente", "RH", 8000.0, 40);
+    
+    printf("----------------------------\n");
     lst_ordena(f_list);
     lst_imprime(f_list);
-    atualiza_arquivo(f_list);
     return 0;
 } 

@@ -1,7 +1,7 @@
-Alberto Domingues;55;30/4/2023;222.222.222-22
-Claudio Caueh;5;28/4/2023;062.757.660-50
-Dayvison Silva;1;21/12/2019;833.847.690-07
-Diana Martins;9;30/4/2023;111.111.111-11
-Fernando Patricio;7;30/4/2023;333.333.333-33
-Joaquim Correa;5;28/4/2023;715.759.350-58
-Victor Emanuel;4;28/4/2023;644.898.710-07
+Alberto Domingues;55;30/4/2023;222.222.222-22;Programador;TI;3000.0;45
+Claudio Caueh;5;28/4/2023;062.757.660-50;Técnico;TI;2000.0;35
+Dayvison Silva;1;21/12/2019;833.847.690-07;Programador;TI;4500.0;40
+Diana Martins;9;30/4/2023;111.111.111-11;Contador;Programador;TI;10000.0;40
+Fernando Patricio;7;30/4/2023;333.333.333-33;Programador;TI;3000.0;10
+Joaquim Correa;5;28/4/2023;715.759.350-58;Gerente;RH;7000.0;30
+Victor Emanuel;4;28/4/2023;644.898.710-07;Analista;Financeiro;5000.0;50

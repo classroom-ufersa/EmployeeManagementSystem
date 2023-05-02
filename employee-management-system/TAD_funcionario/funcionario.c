@@ -3,7 +3,8 @@
 #include <string.h>
 #include <time.h> //necessário para usar localtime() e struct tm
 #include "funcionario.h"
-#define TAM_LINHA 100
+#define TAM_LINHA 200
+#define TAM_NOME 81
 
 union documento {
   char CPF[20];
@@ -22,6 +23,9 @@ struct funcionario {
     char name[50];
     int id;
     char cargo[50]; // OBS: susbtituir pelo tipo estruturado Cargo
+    char setor[30];
+    float salario;
+    int jornada_trabalho;
 };
 
 struct funcionarioslist {
@@ -34,8 +38,9 @@ FuncionariosList* lst_cria(void) {
     return NULL;
 }
 
-// Inserção no início: retorna a lista atualizada
-FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data *data, char *documento) {
+// --------
+FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data *data, char *documento, 
+char *cargo, char *setor, float salario, int jornada_trabalho) {
     FuncionariosList* novo = (FuncionariosList*) malloc(sizeof(FuncionariosList));   
     
     // inserindo as informações passadas pelo usuário
@@ -43,6 +48,10 @@ FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data 
     novo->info.id = id;
     novo->info.data_de_contratacao = data;
     strcpy(novo->info.cpf_rg.CPF, documento);
+    strcpy(novo->info.cargo, cargo);
+    strcpy(novo->info.setor, setor);
+    novo->info.salario = salario;
+    novo->info.jornada_trabalho = jornada_trabalho;
 
     // adicionando de fato o nó na lista
     novo->next = f_list;
@@ -55,12 +64,14 @@ FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data 
     return novo;
 }
 
-// Função que resgata os funcionários arquivados e salva na lista
+// --------
 FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
     FILE *arquivo_origem;
     FuncionariosList *new_list = f_list;
-    char linha[TAM_LINHA], nome[50], documento[20];
-    int id, dia, mes , ano ;
+    char linha[TAM_LINHA], nome[50], documento[20], cargo[50], setor[30];
+    int id, dia, mes , ano;
+    float salario;
+    int jornada_trabalho;
 
     // lendo arquivo com as informacoes dos funcionarios
     arquivo_origem = fopen("TAD_funcionario/dados_funcionarios.txt", "r"); // abre o arquivo_origem para leitura
@@ -69,20 +80,22 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         exit(1);
     }
     while (fgets(linha, TAM_LINHA, arquivo_origem) != NULL) { 
-        sscanf(linha, " %[^;];%d;%d/%d/%d;%[^\n]", nome, &id, &dia, &mes, &ano, documento); // resgata as informações do arquivo
+        //sscanf(linha, " %[^;];%d;%d/%d/%d;%[^\n];", nome, &id, &dia, &mes, &ano, documento);
+        sscanf(linha, " %[^;];%d;%d/%d/%d;%[^;];%[^;];%[^;];%f;%d", nome, &id, &dia, &mes, &ano, 
+        documento, cargo, setor, &salario, &jornada_trabalho); 
         Data *data_contratacao = get_data(); 
         data_contratacao->dia = dia;
         data_contratacao->mes = mes;
         data_contratacao->ano = ano;
                      
-        new_list = lst_insere(new_list, nome, id, data_contratacao, documento);
+        new_list = lst_insere(new_list, nome, id, data_contratacao, documento, cargo, setor, salario, jornada_trabalho);
     }
 
     fclose(arquivo_origem); // fecha o arquivo
     return new_list;
 }
 
-// Função imprime:  imprime valores dos elementos
+// --------
 void lst_imprime(FuncionariosList* f_list) {
     if (lst_vazia(f_list)) {
         printf("Nenhum funcionário encontrado no Sistema!\n");
@@ -94,12 +107,13 @@ void lst_imprime(FuncionariosList* f_list) {
             printf("| Data da contratacao: %d/", p->info.data_de_contratacao->dia); // imprime dia
             printf("%d/", p->info.data_de_contratacao->mes); // imprime mês
             printf("%d", p->info.data_de_contratacao->ano); // imprime ano
-            printf(" | RG/CPF: %s\n", p->info.cpf_rg.CPF); // imprime Documento
+            printf(" | RG/CPF: %s", p->info.cpf_rg.CPF); // imprime Documento
+            printf(" | Cargo: %s | Setor: %s | Salário: %.2f | Jornada de Trabalho: %d\n", 
+            p->info.cargo, p->info.setor, p->info.salario, p->info.jornada_trabalho);
         }
     }
 }
 
-// Função vazia: retorna 1 se vazia ou 0 se não vazia
 int lst_vazia(FuncionariosList* f_list) {
     if (f_list == NULL)
         return 1;
@@ -107,7 +121,6 @@ int lst_vazia(FuncionariosList* f_list) {
         return 0;
 }
 
-// Funcão busca: busca um elemento na lista 
 FuncionariosList* lst_busca(FuncionariosList* f_list, int id) {
     FuncionariosList* p;
     if (lst_vazia(f_list)) {
@@ -123,7 +136,6 @@ FuncionariosList* lst_busca(FuncionariosList* f_list, int id) {
     return NULL; // não achou o elemento buscado     
 }
 
-// Função retira: retira elemento da lista
 FuncionariosList* lst_retira(FuncionariosList* f_list, int id) {
     FuncionariosList* p = lst_busca(f_list, id);
 
@@ -225,4 +237,55 @@ void lst_ordena(FuncionariosList *f_list) {
             }
         }
     }
+}
+
+FuncionariosList *lst_edita(FuncionariosList *f_list, int id) {
+    FuncionariosList* p = lst_busca(f_list, id);
+
+    // verifica se achou o elemento
+    if (p == NULL) {
+        printf("Funcionário com ID %d não encontrado no sistema. Por favor, tente novamente.\n", id);
+        return f_list; 
+    } else {
+        char resposta;
+            printf("Deseja editar o nome (s/n)? ");
+            scanf(" %c", &resposta);
+            if (resposta == 's') {
+                printf("Digite o novo nome: ");
+                scanf(" %[^\n]", p->info.name);
+            }
+            printf("Deseja editar o CPF (s/n)? ");
+            scanf(" %c", &resposta);
+            if (resposta == 's') {
+                printf("Digite o novo CPF: ");
+                scanf(" %[^\n]", p->info.cpf_rg.CPF);
+            }
+            printf("Deseja editar o cargo (s/n)? ");
+            scanf(" %c", &resposta);
+            if (resposta == 's') {
+                printf("Digite o novo cargo: ");
+                scanf(" %[^\n]", p->info.cargo);
+            }
+            printf("Deseja editar o setor (s/n)? ");
+            scanf(" %c", &resposta);
+            if (resposta == 's') {
+                printf("Digite o novo setor: ");
+                scanf(" %[^\n]", p->info.setor);
+            }
+            printf("Deseja editar o salário (s/n)? ");
+            scanf(" %c", &resposta);
+            if (resposta == 's') {
+                printf("Digite o novo salário: ");
+                scanf("%f", &p->info.salario);
+            }
+            printf("Deseja editar a jornada de trabalho (s/n)? ");
+            scanf(" %c", &resposta);
+            if (resposta == 's') {
+                printf("Digite a nova jornada de trabalho: ");
+                scanf("%d", &p->info.jornada_trabalho);
+            }
+            printf("Funcionário atualizado com sucesso!\n");
+    }
+
+    return f_list;
 }
