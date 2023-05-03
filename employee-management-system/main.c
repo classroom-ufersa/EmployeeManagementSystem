@@ -5,6 +5,13 @@
 
 int main() {
     int opcao;
+    Empresa *empresa;
+    empresa = empresa_obter();
+
+    empresa->f_list = lst_cria();
+    empresa->f_list = obter_funcionarios(empresa->f_list);
+    empresa->num_funcionarios = lst_quantidade(empresa->f_list);
+
     do {
         printf("\n----- MENU -----\n");
         printf("1. Cadastrar funcionario\n");
@@ -14,7 +21,8 @@ int main() {
         printf("5. Editar cadastro de funcionario\n");
         printf("6. Consultar receita da empresa\n");
         printf("7. Consultar quantidade de funcionarios por cargo\n");
-        printf("8. Sair\n");
+        printf("8. Exibe as informacoes da empresa\n");
+        printf("9. Sair\n");
         printf("Escolha uma opcao: ");
         //scanf("%d", &opcao);
         
@@ -48,6 +56,11 @@ int main() {
                     //consultar_quantidade_funcionarios_por_cargo(funcionarios, num_funcionarios);
                     break;
                 case 8:
+                    empresa_imprime(empresa);
+                    break;
+                case 9:
+                    lst_libera(empresa->f_list);
+                    free(empresa);
                     printf("Encerrando o programa...\n");
                     break;
                 default:
@@ -55,7 +68,7 @@ int main() {
                     break;
             }
         }
-    } while (opcao != 8);
+    } while (opcao != 9);
 
     return 0;
 }

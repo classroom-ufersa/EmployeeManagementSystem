@@ -3,17 +3,17 @@
 #include "empresa.h" 
 #include "../TAD_funcionario/funcionario.c"
 #define TAM_LINHA 200
-#define TAM_NOME 81
+#define TAM_NOME 50
 
 struct empresa {
     char CNPJ[15];
-    char nome[50];
+    char nome[TAM_NOME];
     char localizacao[100];
     float receita;
     float valor_de_mercado;
     // char cargos[5][50]; // *
-    FuncionariosList *f_list; // **
-    int *num_funcionarios; // ***
+    FuncionariosList *f_list;
+    int num_funcionarios;
 };
 
 Empresa *empresa_cria(char *CNPJ, char *nome, char *localizacao, float receita, float valor_de_mercado) {

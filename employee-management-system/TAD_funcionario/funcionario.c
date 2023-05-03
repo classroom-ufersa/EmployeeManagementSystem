@@ -4,7 +4,7 @@
 #include <time.h> //necessário para usar localtime() e struct tm
 #include "funcionario.h"
 #define TAM_LINHA 200
-#define TAM_NOME 81
+#define TAM_NOME 50
 
 union documento {
   char CPF[20];
@@ -42,7 +42,7 @@ FuncionariosList* lst_cria(void) {
 FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data *data, char *documento, 
 char *cargo, char *setor, float salario, int jornada_trabalho) {
     FuncionariosList* novo = (FuncionariosList*) malloc(sizeof(FuncionariosList));   
-    
+
     // inserindo as informações passadas pelo usuário
     strcpy(novo->info.name, nome);
     novo->info.id = id;
@@ -102,13 +102,14 @@ void lst_imprime(FuncionariosList* f_list) {
         printf("Por favor, tente adicionar algum funcionário antes de exibi-los.\n");
     } else{
         FuncionariosList* p;
+        printf("------------LISTA DE FUNCIONARIOS------------\n");
         for (p = f_list; p != NULL; p = p->next) {
-            printf("ID: %d | Nome: %s ", p->info.id, p->info.name);    
-            printf("| Data da contratacao: %d/", p->info.data_de_contratacao->dia); // imprime dia
+            printf("Nome do Funcionario: %s\nID: %d\n", p->info.name, p->info.id);    
+            printf("Data da contratacao: %d/", p->info.data_de_contratacao->dia); // imprime dia
             printf("%d/", p->info.data_de_contratacao->mes); // imprime mês
             printf("%d", p->info.data_de_contratacao->ano); // imprime ano
-            printf(" | RG/CPF: %s", p->info.cpf_rg.CPF); // imprime Documento
-            printf(" | Cargo: %s | Setor: %s | Salário: %.2f | Jornada de Trabalho: %d\n", 
+            printf("\nRG/CPF: %s", p->info.cpf_rg.CPF); // imprime Documento
+            printf("\nCargo: %s \nSetor: %s \nSalario: %.2f \nJornada de Trabalho: %d\n\n", 
             p->info.cargo, p->info.setor, p->info.salario, p->info.jornada_trabalho);
         }
     }
@@ -288,4 +289,14 @@ FuncionariosList *lst_edita(FuncionariosList *f_list, int id) {
     }
 
     return f_list;
+}
+
+int lst_quantidade(FuncionariosList *f_list) {
+    int quantidade = 0;
+    FuncionariosList* p;
+    
+    for (p = f_list; p != NULL; p = p->next)
+        quantidade++;   
+
+    return quantidade;
 }
