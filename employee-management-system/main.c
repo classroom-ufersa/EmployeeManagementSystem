@@ -11,6 +11,7 @@ int main() {
     empresa->f_list = lst_cria();
     empresa->f_list = obter_funcionarios(empresa->f_list);
     empresa->num_funcionarios = lst_quantidade(empresa->f_list);
+    lst_ordena(empresa->f_list);
 
     do {
         printf("\n----- MENU -----\n");
@@ -41,7 +42,7 @@ int main() {
                     //excluir_funcionario(funcionarios, &num_funcionarios);
                     break;
                 case 3:
-                    //listar_funcionarios(funcionarios, num_funcionarios);
+                    lst_imprime(empresa->f_list);
                     break;
                 case 4:
                     //buscar_funcionario(funcionarios, num_funcionarios);
@@ -50,7 +51,7 @@ int main() {
                     //editar_cadastro_funcionario(funcionarios, num_funcionarios);
                     break;
                 case 6:
-                    //consultar_receita_empresa(empresa);
+                    printf("Receita da empresa: R$ %.2f\n", empresa->receita);
                     break;
                 case 7:
                     //consultar_quantidade_funcionarios_por_cargo(funcionarios, num_funcionarios);

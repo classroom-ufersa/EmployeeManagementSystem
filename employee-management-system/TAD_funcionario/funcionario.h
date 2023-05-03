@@ -7,9 +7,6 @@
 // Struct do tipo union para o Documento (RG/CPF)
 typedef union documento Documento;
 
-// Struct do tipo Data
-typedef struct data Data;
-
 // Struct do tipo Funcionario
 typedef struct funcionario Funcionario;
 
@@ -42,9 +39,6 @@ void lst_imprime(FuncionariosList* f_list);
 
 // Função vazia: retorna 1 se vazia ou 0 se não vazia
 int lst_vazia(FuncionariosList* f_list);
-
-// Função data: obtem a data atual do computador
-Data *get_data(void);
 
 // Função atualiza arquivo: resgata informações do banco de dados
 void atualiza_arquivo(FuncionariosList* f_list);

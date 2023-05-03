@@ -3,7 +3,7 @@
 #include "TAD_empresa/empresa.c"
 
 int main (void) {
-    /* FuncionariosList* f_list;
+    FuncionariosList* f_list;
     f_list = lst_cria();
     f_list = obter_funcionarios(f_list);
     Data *data = get_data();
@@ -19,7 +19,7 @@ int main (void) {
     f_list = lst_insere(f_list, "Patricia Almeida", id, data, "888.888.888-88", "Gerente", "RH", 10000.0, 45);
     
     lst_ordena(f_list);
-    lst_imprime(f_list); */
+    lst_imprime(f_list);
 
     /*Empresa *empresa;
     empresa = empresa_obter();
