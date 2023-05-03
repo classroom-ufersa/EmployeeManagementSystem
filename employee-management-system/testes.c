@@ -1,19 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "TAD_funcionario/funcionario.c"
+//#include "TAD_funcionario/funcionario.c"
+#include "TAD_empresa/empresa.c"
 
 int main (void) {
     /*FuncionariosList* f_list;
-    f_list = lst_cria();
-    f_list = obter_funcionarios(f_list);
-    Data* data = get_data();
-    f_list = lst_insere(f_list, "Claudio Caueh", 5, data, "062.757.660-50");
-    lst_imprime(f_list);
-    f_list = lst_retira(f_list, 2);
-    lst_imprime(f_list);
-    atualiza_arquivo(f_list);*/
-
-    FuncionariosList* f_list;
     f_list = lst_cria();
     f_list = obter_funcionarios(f_list);
     lst_imprime(f_list);
@@ -23,6 +14,13 @@ int main (void) {
     
     printf("----------------------------\n");
     lst_ordena(f_list);
-    lst_imprime(f_list);
+    lst_imprime(f_list);*/
+
+    Empresa *empresa;
+    empresa = empresa_obter();
+    empresa_imprime(empresa);
+    
+    empresa->f_list = lst_cria();
+    empresa->f_list = obter_funcionarios(empresa->f_list);
     return 0;
 } 

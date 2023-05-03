@@ -1,0 +1,4 @@
+1;Programador;TI
+2;Gerente;RH
+3;Analista;Financeiro
+4;Técnico;TI
