@@ -74,7 +74,6 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         exit(1);
     }
     while (fgets(linha, TAM_LINHA, arquivo_origem) != NULL) { 
-        //sscanf(linha, " %[^;];%d;%d/%d/%d;%[^\n];", nome, &id, &dia, &mes, &ano, documento);
         sscanf(linha, " %[^;];%d;%d/%d/%d;%[^;];%[^;];%[^;];%f;%d", nome, &id, &dia, &mes, &ano, 
         documento, cargo, setor, &salario, &jornada_trabalho); 
         Data *data_contratacao = get_data(); 
