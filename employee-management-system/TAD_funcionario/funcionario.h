@@ -23,7 +23,7 @@ void lst_libera(FuncionariosList* l);
 // --- FUNÇÕES DE MANIPULAÇÃO --- 
 // Inserção no início: retorna a lista atualizada
 FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data *data, char *documento, 
-char *cargo, char *setor, float salario, int jornada_trabalho);
+float salario, int jornada_trabalho);
 
 // Função que resgata os funcionários arquivados e salva na lista
 FuncionariosList* obter_funcionarios(FuncionariosList *f_list);

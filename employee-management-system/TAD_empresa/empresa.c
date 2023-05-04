@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "empresa.h" 
+//#include "../TAD_cargo/cargo.c"
 #include "../TAD_funcionario/funcionario.c"
 #define TAM_LINHA 200
 #define TAM_NOME 50
@@ -11,7 +12,7 @@ struct empresa {
     char localizacao[100];
     float receita;
     float valor_de_mercado;
-    // char cargos[5][50]; // *
+    CargosList *c_list;
     FuncionariosList *f_list;
     int num_funcionarios;
 };

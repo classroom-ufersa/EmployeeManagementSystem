@@ -1,18 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include "TAD_funcionario/funcionario.c"
 #include "TAD_empresa/empresa.c"
+
+FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f, CargosList *c_list);
 
 int main() {
     int opcao;
+
+    // cria a empresa
     Empresa *empresa;
     empresa = empresa_obter();
 
+    // pegando as informacoes dos funcionarios a partir do banco de dados
     empresa->f_list = lst_cria();
-    empresa->f_list = obter_funcionarios(empresa->f_list);
-    empresa->num_funcionarios = lst_quantidade(empresa->f_list);
-    lst_ordena(empresa->f_list);
+    FuncionariosList *f = empresa->f_list; 
+    f = obter_funcionarios(f);
+    empresa->num_funcionarios = lst_quantidade(f);
+    lst_ordena(f);
 
+    // pegando as informacoes dos cargos a partir do banco de dados
+    empresa->c_list = cargo_cria();
+    CargosList *c = empresa->c_list; 
+    c = obter_cargos(c);
+
+    // OBS.: adicionar função que percorre o arquivo de cargos e adiciona os ponteiros ao funcinario
+    
     do {
         printf("\n----- MENU -----\n");
         printf("1. Cadastrar funcionario\n");
@@ -36,13 +48,13 @@ int main() {
             printf("\n");
             switch (opcao) {
                 case 1:
-                    //cadastrar_funcionario(funcionarios, &num_funcionarios);
+                    f = pedir_informacoes_funcionario(f, c);
                     break;
                 case 2:
                     //excluir_funcionario(funcionarios, &num_funcionarios);
                     break;
                 case 3:
-                    lst_imprime(empresa->f_list);
+                    lst_imprime(f);
                     break;
                 case 4:
                     //buscar_funcionario(funcionarios, num_funcionarios);
@@ -72,4 +84,54 @@ int main() {
     } while (opcao != 9);
 
     return 0;
+}
+
+
+FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list) {
+    FuncionariosList *f = f_list;
+    CargosList *cargo;
+
+    float salario;
+    char nome[50], documento[20];
+    Data *data = get_data();
+    int jornada_de_trabalho;
+    int id, cargo_id;
+
+    if(lst_vazia(f)){
+        id = 0;
+    } else {
+        id = (f->info.id)+1;
+    }
+
+    if (cargo_lst_vazia(c_list)) {
+        printf("Erro! Lista de cargos vazia.");
+        printf("Primeiro crie algum cargo antes de adicinar Funcinarios.\n");
+    } else {
+        printf("Digite o CPF ou RG do funcionario: ");
+        scanf(" %[^\n]", documento);
+        printf("Digite o nome do funcionario: ");
+        scanf(" %[^\n]", nome);
+        printf("Digite o salario do funcionario: ");
+        scanf("%f", &salario);
+        printf("Digite a jornada de trabalho do funcionario: ");
+        scanf("%d", &jornada_de_trabalho);
+        
+        f = lst_insere(f, nome, id, data, documento, salario, jornada_de_trabalho);
+
+        cargo_imprime(c_list);
+
+        printf("Digite o ID do cargo do Funcionario: ");
+        scanf("%d", &cargo_id);
+        cargo = cargo_busca(c_list, cargo_id);
+
+        while (cargo == NULL) {
+            printf("Parece que nao foi encontrado um cargo com esse ID!\n");
+            printf("Tente digitar um novo ID: ");
+            scanf("%d", &cargo_id);
+            cargo = cargo_busca(c_list, cargo_id);
+        }
+        f->info.cargo = cargo->info;
+    }
+    
+    return f;
 }
