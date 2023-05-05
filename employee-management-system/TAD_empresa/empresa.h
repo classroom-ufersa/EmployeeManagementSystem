@@ -15,7 +15,4 @@ Empresa *obter_empresa();
 // Função imprime: imprime os dados da empresa
 void empresa_imprime(Empresa *empresa);
 
-// Função que consulta a quantidade de funcionarios cadastrados por cargo
-void consulta_funcionarios_por_cargo (Empresa *empresa);
-
 #endif

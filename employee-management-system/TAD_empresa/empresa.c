@@ -32,7 +32,7 @@ Empresa *empresa_cria(char *CNPJ, char *nome, char *localizacao, float receita, 
 Empresa *empresa_obter() {
     Empresa *empresa_arquivo;
     FILE *arquivo_origem;
-    char linha[TAM_LINHA], CNPJ[15], nome[TAM_NOME], localizacao[100];
+    char linha[TAM_LINHA], CNPJ[15], nome_da_empresa[TAM_NOME], localizacao[100];
     float receita, valor_de_mercado;
 
     // lendo arquivo com as informacoes da empresa
@@ -42,10 +42,10 @@ Empresa *empresa_obter() {
         exit(1);
     }
     while (fgets(linha, TAM_LINHA, arquivo_origem) != NULL) {
-        sscanf(linha, " %[^;];%[^;];%[^;];%f;%f", CNPJ, nome, localizacao, &receita, &valor_de_mercado);
+        sscanf(linha, " %[^;];%[^;];%[^;];%f;%f", CNPJ, nome_da_empresa, localizacao, &receita, &valor_de_mercado);
     } 
 
-    empresa_arquivo = empresa_cria(CNPJ, nome, localizacao, receita, valor_de_mercado);
+    empresa_arquivo = empresa_cria(CNPJ, nome_da_empresa, localizacao, receita, valor_de_mercado);
     fclose(arquivo_origem); // fecha o arquivo 
 
     return empresa_arquivo;
@@ -59,5 +59,3 @@ void empresa_imprime(Empresa *empresa) {
     printf("Receita: R$%.2f\n", empresa->receita);
     printf("Valor de mercado: R$%.2f\n", empresa->valor_de_mercado);
 }
-
-// void consulta_funcionarios_por_cargo (Empresa *empresa);

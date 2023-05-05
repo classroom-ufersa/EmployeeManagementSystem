@@ -88,7 +88,7 @@ void cargo_imprime(CargosList *c_list) {
     }
 }
 
-Cargo* cargo_busca(CargosList* c_list, int ID) {
+CargosList* cargo_busca(CargosList* c_list, int ID) {
     CargosList* c;
     if (cargo_lst_vazia(c_list)) {
         printf("ERRO: lista vazia!\n");
@@ -96,7 +96,7 @@ Cargo* cargo_busca(CargosList* c_list, int ID) {
     } else {
         for (c = c_list; c != NULL; c = c->next) {
             if(c->info->ID == ID) {
-                return c->info;
+                return c;
             }
         }
     }
@@ -156,4 +156,17 @@ void cargo_atualiza_arquivo(CargosList* c_list) {
     
     fclose(arquivo); // Fecha o arquivo
     printf("Arquivo atualizado!\n");
+}
+
+void consulta_funcionarios_por_cargo(CargosList *c_list){
+    CargosList *cargos;
+    if (cargo_lst_vazia(c_list)) {
+        printf("Nenhum cargo encontrado no Sistema!\n");
+    } else{
+        printf("------------QUANTIDADE DE FUNCIONARIOS POR CARGO------------\n");
+        for (cargos = c_list; cargos != NULL; cargos = cargos->next) {
+            printf("Cargo: %s\n", cargos->info->nome_cargo);    
+            printf("Quantidade de funcionarios: %d\n\n", cargos->info->qtd_funcionarios); 
+        }
+    }
 }

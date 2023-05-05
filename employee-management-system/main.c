@@ -76,13 +76,14 @@ int main() {
                     printf("Receita da empresa: R$ %.2f\n", empresa->receita);
                     break;
                 case 7:
-                    //consultar_quantidade_funcionarios_por_cargo(funcionarios, num_funcionarios);
+                    consulta_funcionarios_por_cargo(c);
                     break;
                 case 8:
                     empresa_imprime(empresa);
                     break;
                 case 9:
-                    lst_libera(empresa->f_list);
+                    lst_libera(f);
+                    cargo_libera(c);
                     free(empresa);
                     printf("Encerrando o programa...\n");
                     break;
@@ -99,13 +100,13 @@ int main() {
 
 FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list, int id) {
     FuncionariosList *f = f_list;
-    Cargo *cargo;
+    CargosList *cargo;
 
     float salario;
     char nome[50], documento[20];
     Data *data = get_data();
     int jornada_de_trabalho;
-    int id, cargo_id;
+    int cargo_id;
 
     if (cargo_lst_vazia(c_list)) {
         printf("Erro! Lista de cargos vazia.");
@@ -134,7 +135,7 @@ FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, Cargos
             scanf("%d", &cargo_id);
             cargo = cargo_busca(c_list, cargo_id);
         }
-        f->info.cargo = cargo;
+        f->info.cargo = cargo->info;
     }   
     return f;
 }
