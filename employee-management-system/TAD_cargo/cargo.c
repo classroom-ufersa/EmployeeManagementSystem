@@ -88,7 +88,7 @@ void cargo_imprime(CargosList *c_list) {
     }
 }
 
-CargosList* cargo_busca(CargosList* c_list, int ID) {
+Cargo* cargo_busca(CargosList* c_list, int ID) {
     CargosList* c;
     if (cargo_lst_vazia(c_list)) {
         printf("ERRO: lista vazia!\n");
@@ -96,7 +96,7 @@ CargosList* cargo_busca(CargosList* c_list, int ID) {
     } else {
         for (c = c_list; c != NULL; c = c->next) {
             if(c->info->ID == ID) {
-                return c;
+                return c->info;
             }
         }
     }

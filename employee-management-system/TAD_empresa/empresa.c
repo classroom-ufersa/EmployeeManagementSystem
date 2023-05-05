@@ -59,3 +59,5 @@ void empresa_imprime(Empresa *empresa) {
     printf("Receita: R$%.2f\n", empresa->receita);
     printf("Valor de mercado: R$%.2f\n", empresa->valor_de_mercado);
 }
+
+// void consulta_funcionarios_por_cargo (Empresa *empresa);

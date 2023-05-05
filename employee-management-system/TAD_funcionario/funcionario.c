@@ -25,8 +25,8 @@ struct funcionario {
 
 struct funcionarioslist {
     Funcionario info;
-    int *ultimo_id_cadastrado;
-    int *qtd_nos;
+    int ultimo_id_cadastrado;
+    int qtd_funcionarios;
     struct funcionarioslist *next;
     struct funcionarioslist *prev;
 };
@@ -85,17 +85,8 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         qtd_funcionarios++;
         if (id > maior_id){
             maior_id = id;
-            if (f_list->prev != NULL) {
-                new_list->ultimo_id_cadastrado = new_list->prev->ultimo_id_cadastrado;
-                *(new_list->ultimo_id_cadastrado) = maior_id;
-                new_list->qtd_nos =  new_list->prev->qtd_nos;
-                *(new_list->qtd_nos) = qtd_funcionarios;
-            } else {
-                *(new_list->qtd_nos) = qtd_funcionarios;
-                *(new_list->ultimo_id_cadastrado) = maior_id;
-            }
+            new_list->ultimo_id_cadastrado = maior_id;
         }
-
     }
 
     fclose(arquivo_origem); // fecha o arquivo
@@ -271,14 +262,4 @@ FuncionariosList *lst_edita(FuncionariosList *f_list, int id) {
     }
 
     return f_list;
-}
-
-int lst_quantidade(FuncionariosList *f_list) {
-    int quantidade = 0;
-    FuncionariosList* p;
-    
-    for (p = f_list; p != NULL; p = p->next)
-        quantidade++;   
-
-    return quantidade;
 }

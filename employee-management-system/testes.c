@@ -8,16 +8,19 @@ int main (void) {
     f_list = obter_funcionarios(f_list);
     Data *data = get_data();
     
-    //colocar essa verificacao no main.c
     int id;
-    if(lst_vazia(f_list)){
-        id = 1;
-    } else {
-        id = ++(*(f_list->ultimo_id_cadastrado));
-    }
-    
-    f_list = lst_insere(f_list, "Patricia Almeida", id, data, "888.888.888-88", 10000.0, 45);
-    
+
+
+
+    // inserindo um novo funcionario na lista
+    f_list = lst_insere(f_list, "Barbara Almeida", ++id, data, "888.888.888-88", 10000.0, 45);
+    ++(f_list->qtd_funcionarios);
+    lst_ordena(f_list);
+    lst_imprime(f_list);
+
+    // inserindo um novo funcionario na lista
+    f_list = lst_insere(f_list, "Antonio Virgulini", ++id, data, "000.000.000-00", 4500.0, 40);
+    ++(f_list->qtd_funcionarios);
     lst_ordena(f_list);
     lst_imprime(f_list);
 

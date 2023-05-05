@@ -52,7 +52,4 @@ void lst_ordena(FuncionariosList *f_list);
 // Função edita: altera o cadastro do funcionário
 FuncionariosList *lst_edita(FuncionariosList *f_list, int id);
 
-// Função que retorna a quantidade de elementos da lista
-int lst_quantidade(FuncionariosList *f_list);
-
 #endif

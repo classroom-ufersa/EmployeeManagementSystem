@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include "TAD_empresa/empresa.c"
 
-FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f, CargosList *c_list);
+FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id);
 
 int main() {
-    int opcao;
+    int opcao, ultimo_id_cadastrado;
 
     // cria a empresa
     Empresa *empresa;
@@ -15,8 +15,15 @@ int main() {
     empresa->f_list = lst_cria();
     FuncionariosList *f = empresa->f_list; 
     f = obter_funcionarios(f);
-    empresa->num_funcionarios = lst_quantidade(f);
-    lst_ordena(f);
+    
+    // verifica se a lista está vazia e inicializa as variaveis 'ultimo_id_cadastrado' e "empresa->num_funcionarios"
+    if(lst_vazia(f)) {
+        ultimo_id_cadastrado = 0;
+        empresa->num_funcionarios = 0;
+    } else {
+        empresa->num_funcionarios = f->qtd_funcionarios;
+        ultimo_id_cadastrado = f->ultimo_id_cadastrado;
+    }
 
     // pegando as informacoes dos cargos a partir do banco de dados
     empresa->c_list = cargo_cria();
@@ -48,12 +55,15 @@ int main() {
             printf("\n");
             switch (opcao) {
                 case 1:
-                    f = pedir_informacoes_funcionario(f, c);
+                    f = pedir_informacoes_funcionario(f, c, ultimo_id_cadastrado);
+                    f->qtd_funcionarios = ++(empresa->num_funcionarios);
+                    f->ultimo_id_cadastrado = ++ultimo_id_cadastrado;
                     break;
                 case 2:
                     //excluir_funcionario(funcionarios, &num_funcionarios);
                     break;
                 case 3:
+                    lst_ordena(f);
                     lst_imprime(f);
                     break;
                 case 4:
@@ -87,21 +97,15 @@ int main() {
 }
 
 
-FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list) {
+FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list, int id) {
     FuncionariosList *f = f_list;
-    CargosList *cargo;
+    Cargo *cargo;
 
     float salario;
     char nome[50], documento[20];
     Data *data = get_data();
     int jornada_de_trabalho;
     int id, cargo_id;
-
-    if(lst_vazia(f)){
-        id = 0;
-    } else {
-        id = (f->info.id)+1;
-    }
 
     if (cargo_lst_vazia(c_list)) {
         printf("Erro! Lista de cargos vazia.");
@@ -116,7 +120,7 @@ FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, Cargos
         printf("Digite a jornada de trabalho do funcionario: ");
         scanf("%d", &jornada_de_trabalho);
         
-        f = lst_insere(f, nome, id, data, documento, salario, jornada_de_trabalho);
+        f = lst_insere(f, nome, ++id, data, documento, salario, jornada_de_trabalho);
 
         cargo_imprime(c_list);
 
@@ -130,8 +134,7 @@ FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, Cargos
             scanf("%d", &cargo_id);
             cargo = cargo_busca(c_list, cargo_id);
         }
-        f->info.cargo = cargo->info;
-    }
-    
+        f->info.cargo = cargo;
+    }   
     return f;
 }
