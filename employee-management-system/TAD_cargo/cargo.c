@@ -73,7 +73,7 @@ int cargo_lst_vazia(CargosList* c_list) {
         return 0;
 }
 
-CargosList* cargo_imprime(CargosList *c_list) {
+void cargo_imprime(CargosList *c_list) {
     if (cargo_lst_vazia(c_list)) {
         printf("Nenhum cargo encontrado no Sistema!\n");
     } else{

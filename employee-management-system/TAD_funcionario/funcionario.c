@@ -25,6 +25,8 @@ struct funcionario {
 
 struct funcionarioslist {
     Funcionario info;
+    int *ultimo_id_cadastrado;
+    int *qtd_nos;
     struct funcionarioslist *next;
     struct funcionarioslist *prev;
 };
@@ -59,8 +61,8 @@ float salario, int jornada_trabalho) {
 FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
     FILE *arquivo_origem;
     FuncionariosList *new_list = f_list;
-    char linha[TAM_LINHA], nome[50], documento[20], cargo[50], setor[30];
-    int id, dia, mes , ano, cargo_id = 0;
+    char linha[TAM_LINHA], nome[50], documento[20];
+    int id, dia, mes , ano, cargo_id = 0, maior_id = 0, qtd_funcionarios = 0;
     float salario;
     int jornada_trabalho;
 
@@ -76,9 +78,24 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         data_contratacao->dia = dia;
         data_contratacao->mes = mes;
         data_contratacao->ano = ano;
-        
+
         new_list = lst_insere(new_list, nome, id, data_contratacao, documento, salario, jornada_trabalho);
-        new_list->info.cargo_id = cargo_id;
+        //new_list->info.cargo_id = cargo_id;
+        
+        qtd_funcionarios++;
+        if (id > maior_id){
+            maior_id = id;
+            if (f_list->prev != NULL) {
+                new_list->ultimo_id_cadastrado = new_list->prev->ultimo_id_cadastrado;
+                *(new_list->ultimo_id_cadastrado) = maior_id;
+                new_list->qtd_nos =  new_list->prev->qtd_nos;
+                *(new_list->qtd_nos) = qtd_funcionarios;
+            } else {
+                *(new_list->qtd_nos) = qtd_funcionarios;
+                *(new_list->ultimo_id_cadastrado) = maior_id;
+            }
+        }
+
     }
 
     fclose(arquivo_origem); // fecha o arquivo

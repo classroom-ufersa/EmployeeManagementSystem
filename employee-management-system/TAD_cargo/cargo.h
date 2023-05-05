@@ -14,7 +14,7 @@ CargosList* cargo_cria(void);
 CargosList* cargo_insere(CargosList* c_list, int ID, int qtd_funcionarios, char *nome_cargo, char *setor);
 CargosList* obter_cargos(CargosList *c_list);
 int cargo_lst_vazia(CargosList* c_list);
-CargosList* cargo_imprime(CargosList *c_list);
+void cargo_imprime(CargosList *c_list);
 CargosList* cargo_busca(CargosList* c_list, int ID);
 CargosList* cargo_retira(CargosList* c_list, int ID);
 void cargo_libera(CargosList* f_list);
