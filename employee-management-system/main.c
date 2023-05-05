@@ -3,6 +3,7 @@
 #include "TAD_empresa/empresa.c"
 
 FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id);
+void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list);
 
 int main() {
     int opcao, ultimo_id_cadastrado;
@@ -31,7 +32,9 @@ int main() {
     c = obter_cargos(c);
 
     // OBS.: adicionar função que percorre o arquivo de cargos e adiciona os ponteiros ao funcinario
-    
+    adiciona_cargo_a_funcionario(c, f);
+
+
     do {
         printf("\n----- MENU -----\n");
         printf("1. Cadastrar funcionario\n");
@@ -97,6 +100,19 @@ int main() {
     return 0;
 }
 
+void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list) {
+    if (cargo_lst_vazia(c_list) || lst_vazia(f_list)) {
+        printf("Parece que você tem arquivos vazios, tente adicionar cargos e funcionários para começar!\n");
+    } else {
+        FuncionariosList *funcionario;
+        CargosList *cargo;
+        for (funcionario = f_list; funcionario != NULL; funcionario = funcionario->next) {
+            cargo = cargo_busca(c_list, funcionario->info.cargo_id);
+            //cargo = cargo_busca(c_list, 1);
+            funcionario->info.cargo =  cargo->info;
+        }
+    }    
+}
 
 FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list, int id) {
     FuncionariosList *f = f_list;
@@ -136,6 +152,7 @@ FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, Cargos
             cargo = cargo_busca(c_list, cargo_id);
         }
         f->info.cargo = cargo->info;
+        f->info.cargo_id = cargo->info->ID;
     }   
     return f;
 }

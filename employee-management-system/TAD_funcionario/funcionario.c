@@ -80,7 +80,7 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         data_contratacao->ano = ano;
 
         new_list = lst_insere(new_list, nome, id, data_contratacao, documento, salario, jornada_trabalho);
-        //new_list->info.cargo_id = cargo_id;
+        new_list->info.cargo_id = cargo_id;
         
         qtd_funcionarios++;
         if (id > maior_id){
@@ -108,7 +108,7 @@ void lst_imprime(FuncionariosList* f_list) {
             printf("RG/CPF: %s\n", p->info.cpf_rg.CPF); // imprime Documento
             printf("Salario: %.2f \nJornada de Trabalho: %d\n", p->info.salario, p->info.jornada_trabalho);
             if (p->info.cargo != NULL) {
-                printf("Cargo: %s\n Setor: %s\n\n", p->info.cargo->nome_cargo, p->info.cargo->setor);
+                printf("Cargo: %s\nSetor: %s\n\n", p->info.cargo->nome_cargo, p->info.cargo->setor);
             } else {
                 printf("Ops! Cargo inexistente, tente editar o funcionario.\n\n");
             }
