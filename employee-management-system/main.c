@@ -1,12 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "TAD_empresa/empresa.c"
 
 FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id);
 void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list);
 
 int main() {
-    int opcao, ultimo_id_cadastrado;
+    int opcao, ultimo_id_cadastrado, id_busca_funcionario;
 
     // cria a empresa
     Empresa *empresa;
@@ -36,7 +34,7 @@ int main() {
 
 
     do {
-        printf("\n----- MENU -----\n");
+        printf("----- MENU -----\n");
         printf("1. Cadastrar funcionario\n");
         printf("2. Excluir funcionario\n");
         printf("3. Listar funcionarios\n");
@@ -55,12 +53,14 @@ int main() {
             opcao = 0;
             continue; // Volta para o início do laço do-while
         } else {
-            printf("\n");
             switch (opcao) {
                 case 1:
                     f = pedir_informacoes_funcionario(f, c, ultimo_id_cadastrado);
                     f->qtd_funcionarios = ++(empresa->num_funcionarios);
                     f->ultimo_id_cadastrado = ++ultimo_id_cadastrado;
+                    printf("Funcionário cadastrado com sucesso!\n");
+                    printf("Funcionário de ID: %d", ultimo_id_cadastrado);
+                    printf("Quantidade de funcionários atualizado para %d\n", empresa->num_funcionarios);
                     break;
                 case 2:
                     //excluir_funcionario(funcionarios, &num_funcionarios);
@@ -70,7 +70,17 @@ int main() {
                     lst_imprime(f);
                     break;
                 case 4:
-                    //buscar_funcionario(funcionarios, num_funcionarios);
+                    printf("Digite o ID do funcionário que deseja buscar: ");
+                    scanf("%d",  &id_busca_funcionario);
+                    
+                    FuncionariosList* funcionario_buscado;
+                    funcionario_buscado = lst_busca(f, id_busca_funcionario);
+
+                    if (funcionario_buscado != NULL){
+                        lst_imprime_um_funcionario(funcionario_buscado);
+                    } else {
+                        printf("Funcionário com o id %d não encontrado.\n", id_busca_funcionario);
+                    }
                     break;
                 case 5:
                     //editar_cadastro_funcionario(funcionarios, num_funcionarios);
@@ -88,6 +98,7 @@ int main() {
                     lst_libera(f);
                     cargo_libera(c);
                     free(empresa);
+                    printf("Obrigado por escolher nossos serviços!\n");
                     printf("Encerrando o programa...\n");
                     break;
                 default:
@@ -108,7 +119,6 @@ void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list) 
         CargosList *cargo;
         for (funcionario = f_list; funcionario != NULL; funcionario = funcionario->next) {
             cargo = cargo_busca(c_list, funcionario->info.cargo_id);
-            //cargo = cargo_busca(c_list, 1);
             funcionario->info.cargo =  cargo->info;
         }
     }    
@@ -153,6 +163,7 @@ FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, Cargos
         }
         f->info.cargo = cargo->info;
         f->info.cargo_id = cargo->info->ID;
+        f->info.cargo->qtd_funcionarios++;
     }   
     return f;
 }

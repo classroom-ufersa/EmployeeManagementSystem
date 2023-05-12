@@ -9,6 +9,7 @@ struct data {
 
 Data *get_data(void) { 
     Data* data = (Data*) malloc(sizeof(Data)); 
+    
     //ponteiro para struct que armazena data e hora  
     struct tm *data_hora_atual;     
     

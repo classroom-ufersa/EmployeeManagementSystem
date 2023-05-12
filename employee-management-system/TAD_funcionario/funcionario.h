@@ -52,4 +52,7 @@ void lst_ordena(FuncionariosList *f_list);
 // Função edita: altera o cadastro do funcionário
 FuncionariosList *lst_edita(FuncionariosList *f_list, int id);
 
+// Função que imprime apenas o funcionario passado como parametro
+void lst_imprime_um_funcionario(FuncionariosList* f_list);
+
 #endif

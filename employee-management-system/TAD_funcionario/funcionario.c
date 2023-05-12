@@ -263,3 +263,18 @@ FuncionariosList *lst_edita(FuncionariosList *f_list, int id) {
 
     return f_list;
 }
+
+void lst_imprime_um_funcionario(FuncionariosList* f_list) {
+    printf("Nome do Funcionario: %s\n", f_list->info.name);
+    printf("ID: %d\n", f_list->info.id);    
+    printf("Data da contratacao: %d/", f_list->info.data_de_contratacao->dia); // imprime dia
+    printf("%d/", f_list->info.data_de_contratacao->mes); // imprime mês
+    printf("%d\n", f_list->info.data_de_contratacao->ano); // imprime ano
+    printf("RG/CPF: %s\n", f_list->info.cpf_rg.CPF); // imprime Documento
+    printf("Salario: %.2f \nJornada de Trabalho: %d\n", f_list->info.salario, f_list->info.jornada_trabalho);
+     if (f_list->info.cargo != NULL) {
+        printf("Cargo: %s\nSetor: %s\n\n", f_list->info.cargo->nome_cargo, f_list->info.cargo->setor);
+    } else {
+        printf("Ops! Cargo inexistente, tente editar o funcionario.\n\n");
+    }
+}

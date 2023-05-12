@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "TAD_empresa/empresa.c"
 
 int main (void) {
@@ -9,8 +7,6 @@ int main (void) {
     Data *data = get_data();
     
     int id;
-
-
 
     // inserindo um novo funcionario na lista
     f_list = lst_insere(f_list, "Barbara Almeida", ++id, data, "888.888.888-88", 10000.0, 45);
