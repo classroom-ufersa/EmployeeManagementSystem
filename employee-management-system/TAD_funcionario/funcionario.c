@@ -72,6 +72,15 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         printf("Erro ao abrir o arquivo.\n");
         exit(1);
     }
+
+    fseek(arquivo_origem, 0, SEEK_END); // posiciona o cursor no final do arquivo
+    if (ftell(arquivo_origem) == 0) { // verifica a posição atual do cursor
+        printf("Arquivo 'dados_funcionarios.txt' está vazio.\n");
+        return NULL;
+    }else{
+        rewind(arquivo_origem); // recoloca o cursos no inicio do arquivo
+    }
+
     while (fgets(linha, TAM_LINHA, arquivo_origem) != NULL) { 
         sscanf(linha, " %[^;];%d;%d/%d/%d;%[^;];%f;%d;%d", nome, &id, &dia, &mes, &ano, documento, &salario, &jornada_trabalho, &cargo_id);
         Data *data_contratacao = get_data(); 
@@ -83,6 +92,7 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         new_list->info.cargo_id = cargo_id;
         
         qtd_funcionarios++;
+        new_list->qtd_funcionarios = qtd_funcionarios;
         if (id > maior_id){
             maior_id = id;
             new_list->ultimo_id_cadastrado = maior_id;
@@ -138,12 +148,12 @@ FuncionariosList* lst_busca(FuncionariosList* f_list, int id) {
     return NULL; // não achou o elemento buscado     
 }
 
-FuncionariosList* lst_retira(FuncionariosList* f_list, int id) {
+FuncionariosList* lst_retira(FuncionariosList* f_list, int id, int *qtd_funcionarios_ptr) {
     FuncionariosList* p = lst_busca(f_list, id);
 
     // verifica se achou elemento
     if (p == NULL) {
-        printf("Funcionário com ID %d não encontrado no sistema. Por favor, tente novamente.\n", id);
+        printf("Funcionário com ID %d não foi encontrado no sistema. Por favor, tente novamente.\n", id);
         return f_list; 
     }
 
@@ -156,8 +166,10 @@ FuncionariosList* lst_retira(FuncionariosList* f_list, int id) {
     if (p->next != NULL) // testa se é o último elemento
         p->next->prev = p->prev; 
     
+    
+    (p->info.cargo->qtd_funcionarios)--;
+    (*qtd_funcionarios_ptr)--; // atualiza a quantidade de funcionarios
     free(p);
-    // atualiza_arquivo(f_list);
     return f_list;
 }
 

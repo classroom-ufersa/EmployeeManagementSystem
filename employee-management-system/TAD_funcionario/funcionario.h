@@ -29,7 +29,7 @@ float salario, int jornada_trabalho);
 FuncionariosList* obter_funcionarios(FuncionariosList *f_list);
 
 // Função retira: retira elemento da lista
-FuncionariosList* lst_retira(FuncionariosList* f_list, int id);
+FuncionariosList* lst_retira(FuncionariosList* f_list, int id, int *qtd_funcionarios_ptr);
 
 // Funcão busca: busca um elemento na lista 
 FuncionariosList* lst_busca(FuncionariosList* f_list, int id) ;

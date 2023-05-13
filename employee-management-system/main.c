@@ -5,6 +5,7 @@ void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list);
 
 int main() {
     int opcao, ultimo_id_cadastrado, id_busca_funcionario;
+    char char_invalido;
 
     // cria a empresa
     Empresa *empresa;
@@ -32,9 +33,8 @@ int main() {
     // OBS.: adicionar função que percorre o arquivo de cargos e adiciona os ponteiros ao funcinario
     adiciona_cargo_a_funcionario(c, f);
 
-
     do {
-        printf("----- MENU -----\n");
+        printf("--------- MENU ---------\n");
         printf("1. Cadastrar funcionario\n");
         printf("2. Excluir funcionario\n");
         printf("3. Listar funcionarios\n");
@@ -45,31 +45,33 @@ int main() {
         printf("8. Exibe as informacoes da empresa\n");
         printf("9. Sair\n");
         printf("Escolha uma opcao: ");
-        //scanf("%d", &opcao);
         
-        if (scanf("%d", &opcao) != 1) {
-            printf("Digite um valor numérico válido!\n");
-            fflush(stdin); // Limpa o buffer de entrada
-            opcao = 0;
-            continue; // Volta para o início do laço do-while
-        } else {
-            switch (opcao) {
-                case 1:
+        while (scanf("%d%c", &opcao, &char_invalido) != 2 || char_invalido != '\n' || opcao < 1 || opcao > 9) {
+            printf("Opcao invalida. Digite novamente: ");
+
+            // Limpa o buffer do teclado
+            while (getchar() != '\n');
+        }
+        switch (opcao) {
+                case 1: // adiciona funcionário
                     f = pedir_informacoes_funcionario(f, c, ultimo_id_cadastrado);
                     f->qtd_funcionarios = ++(empresa->num_funcionarios);
                     f->ultimo_id_cadastrado = ++ultimo_id_cadastrado;
                     printf("Funcionário cadastrado com sucesso!\n");
-                    printf("Funcionário de ID: %d", ultimo_id_cadastrado);
+                    printf("Funcionário de ID: %d\n", ultimo_id_cadastrado);
                     printf("Quantidade de funcionários atualizado para %d\n", empresa->num_funcionarios);
                     break;
-                case 2:
-                    //excluir_funcionario(funcionarios, &num_funcionarios);
+                case 2: // exclui funcionário
+                    printf("Digite o ID do funcionário que deseja excluir do sistema: ");
+                    scanf("%d", &id_busca_funcionario);
+                    f = lst_retira(f, id_busca_funcionario, &empresa->num_funcionarios);
+                    f->qtd_funcionarios = empresa->num_funcionarios;
                     break;
-                case 3:
+                case 3: // imprime funcionários
                     lst_ordena(f);
                     lst_imprime(f);
                     break;
-                case 4:
+                case 4: // busca funcionário
                     printf("Digite o ID do funcionário que deseja buscar: ");
                     scanf("%d",  &id_busca_funcionario);
                     
@@ -82,30 +84,29 @@ int main() {
                         printf("Funcionário com o id %d não encontrado.\n", id_busca_funcionario);
                     }
                     break;
-                case 5:
+                case 5: // edita funcionário
                     //editar_cadastro_funcionario(funcionarios, num_funcionarios);
                     break;
-                case 6:
+                case 6: // exibe receita da empresa
                     printf("Receita da empresa: R$ %.2f\n", empresa->receita);
                     break;
-                case 7:
+                case 7: // consulta a quantidade de funcionários por cago
                     consulta_funcionarios_por_cargo(c);
                     break;
-                case 8:
+                case 8: // exibe as informações da empresa
                     empresa_imprime(empresa);
                     break;
-                case 9:
+                case 9: // sai do programa
                     lst_libera(f);
                     cargo_libera(c);
                     free(empresa);
-                    printf("Obrigado por escolher nossos serviços!\n");
+                    printf("\nObrigado por escolher nossos serviços!\n");
                     printf("Encerrando o programa...\n");
                     break;
                 default:
                     printf("Opcao invalida!\n");
                     break;
             }
-        }
     } while (opcao != 9);
 
     return 0;
