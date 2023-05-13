@@ -36,7 +36,7 @@ FuncionariosList* lst_cria(void) {
 }
 
 FuncionariosList* lst_insere(FuncionariosList* f_list, char *nome, int id, Data *data, char *documento, 
-float salario, int jornada_trabalho) {
+float salario, int jornada_trabalho, int *qtd_funcionarios) {
     FuncionariosList* novo = (FuncionariosList*) malloc(sizeof(FuncionariosList));   
 
     // inserindo as informações passadas pelo usuário
@@ -46,6 +46,7 @@ float salario, int jornada_trabalho) {
     strcpy(novo->info.cpf_rg.CPF, documento);
     novo->info.salario = salario;
     novo->info.jornada_trabalho = jornada_trabalho;
+    novo->qtd_funcionarios = ++(*qtd_funcionarios);
 
     // adicionando de fato o nó na lista
     novo->next = f_list;
@@ -83,20 +84,18 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
 
     while (fgets(linha, TAM_LINHA, arquivo_origem) != NULL) { 
         sscanf(linha, " %[^;];%d;%d/%d/%d;%[^;];%f;%d;%d", nome, &id, &dia, &mes, &ano, documento, &salario, &jornada_trabalho, &cargo_id);
-        Data *data_contratacao = get_data(); 
+        Data *data_contratacao = (Data*) malloc(sizeof(Data)); 
         data_contratacao->dia = dia;
         data_contratacao->mes = mes;
         data_contratacao->ano = ano;
 
-        new_list = lst_insere(new_list, nome, id, data_contratacao, documento, salario, jornada_trabalho);
+        new_list = lst_insere(new_list, nome, id, data_contratacao, documento, salario, jornada_trabalho, &qtd_funcionarios);
         new_list->info.cargo_id = cargo_id;
         
-        qtd_funcionarios++;
-        new_list->qtd_funcionarios = qtd_funcionarios;
-        if (id > maior_id){
+        if (id > maior_id)
             maior_id = id;
-            new_list->ultimo_id_cadastrado = maior_id;
-        }
+        
+        new_list->ultimo_id_cadastrado = maior_id;
     }
 
     fclose(arquivo_origem); // fecha o arquivo
@@ -109,7 +108,7 @@ void lst_imprime(FuncionariosList* f_list) {
         printf("Por favor, tente adicionar algum funcionário antes de exibi-los.\n");
     } else{
         FuncionariosList* p;
-        printf("------------LISTA DE FUNCIONARIOS------------\n");
+        printf("\n------------LISTA DE FUNCIONARIOS------------\n");
         for (p = f_list; p != NULL; p = p->next) {
             printf("Nome do Funcionario: %s\nID: %d\n", p->info.name, p->info.id);    
             printf("Data da contratacao: %d/", p->info.data_de_contratacao->dia); // imprime dia
@@ -170,6 +169,9 @@ FuncionariosList* lst_retira(FuncionariosList* f_list, int id, int *qtd_funciona
     (p->info.cargo->qtd_funcionarios)--;
     (*qtd_funcionarios_ptr)--; // atualiza a quantidade de funcionarios
     free(p);
+
+    printf("O funcionário de ID %d foi excluído do sistema.\n", id);
+    printf("Quantidade de funcionários atualizado para %d\n", *qtd_funcionarios_ptr);
     return f_list;
 }
 
@@ -231,7 +233,7 @@ void lst_ordena(FuncionariosList *f_list) {
     }
 }
 
-FuncionariosList *lst_edita(FuncionariosList *f_list, int id) {
+FuncionariosList *lst_edita(FuncionariosList *f_list, CargosList *c_list, int id) {
     FuncionariosList* p = lst_busca(f_list, id);
 
     // verifica se achou o elemento
@@ -255,8 +257,23 @@ FuncionariosList *lst_edita(FuncionariosList *f_list, int id) {
             printf("Deseja editar o cargo (s/n)? ");
             scanf(" %c", &resposta);
             if (resposta == 's') {
-                //printf("Digite o novo cargo: ");
-                //scanf(" %[^\n]", p->info.cargo);
+                // Edita o cargo
+                int cargo_id;
+                CargosList *cargo;
+                printf("Digite o ID do novo cargo: ");
+                scanf("%d", &cargo_id);
+                cargo = cargo_busca(c_list, cargo_id);
+
+                while (cargo == NULL) {
+                    printf("Parece que nao foi encontrado um cargo com esse ID!\n");
+                    printf("Tente digitar um novo ID: ");
+                    scanf("%d", &cargo_id);
+                    cargo = cargo_busca(c_list, cargo_id);
+                }
+                p->info.cargo->qtd_funcionarios--; // Diminui a quantidade de funcionários no cargo anterior
+                p->info.cargo = cargo->info;
+                p->info.cargo_id = cargo->info->ID;
+                p->info.cargo->qtd_funcionarios++; // Aumenta a quantidade de funcionários no cargo atual
             }
             printf("Deseja editar o salário (s/n)? ");
             scanf(" %c", &resposta);

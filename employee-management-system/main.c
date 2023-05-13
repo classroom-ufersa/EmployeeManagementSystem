@@ -1,6 +1,6 @@
 #include "TAD_empresa/empresa.c"
 
-FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id);
+FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id, int *qtd_funcionarios);
 void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list);
 
 int main() {
@@ -54,8 +54,7 @@ int main() {
         }
         switch (opcao) {
                 case 1: // adiciona funcionário
-                    f = pedir_informacoes_funcionario(f, c, ultimo_id_cadastrado);
-                    f->qtd_funcionarios = ++(empresa->num_funcionarios);
+                    f = pedir_informacoes_funcionario(f, c, ultimo_id_cadastrado, &empresa->num_funcionarios);
                     f->ultimo_id_cadastrado = ++ultimo_id_cadastrado;
                     printf("Funcionário cadastrado com sucesso!\n");
                     printf("Funcionário de ID: %d\n", ultimo_id_cadastrado);
@@ -85,7 +84,9 @@ int main() {
                     }
                     break;
                 case 5: // edita funcionário
-                    //editar_cadastro_funcionario(funcionarios, num_funcionarios);
+                    printf("Digite o ID do funcionário que deseja buscar: ");
+                    scanf("%d",  &id_busca_funcionario);
+                    f = lst_edita(f, c, id_busca_funcionario); 
                     break;
                 case 6: // exibe receita da empresa
                     printf("Receita da empresa: R$ %.2f\n", empresa->receita);
@@ -125,7 +126,7 @@ void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list) 
     }    
 }
 
-FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list, int id) {
+FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list, int id, int *qtd_funcionarios) {
     FuncionariosList *f = f_list;
     CargosList *cargo;
 
@@ -148,7 +149,7 @@ FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, Cargos
         printf("Digite a jornada de trabalho do funcionario: ");
         scanf("%d", &jornada_de_trabalho);
         
-        f = lst_insere(f, nome, ++id, data, documento, salario, jornada_de_trabalho);
+        f = lst_insere(f, nome, ++id, data, documento, salario, jornada_de_trabalho, qtd_funcionarios);
 
         cargo_imprime(c_list);
 
