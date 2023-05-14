@@ -1,10 +1,11 @@
 #include "TAD_empresa/empresa.c"
 
-FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id, int *qtd_funcionarios);
+FuncionariosList *solicita_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id, int *qtd_funcionarios);
+CargosList *solicita_informacoes_cargo(CargosList *c_list, int id, int *qtd_cargos);
 void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list);
 
 int main() {
-    int opcao, ultimo_id_cadastrado, id_busca_funcionario;
+    int opcao, ultimo_id_funcionario, ultimo_id_cargo, id_funcionario, id_cargo;
     char char_invalido;
 
     // cria a empresa
@@ -16,19 +17,28 @@ int main() {
     FuncionariosList *f = empresa->f_list; 
     f = obter_funcionarios(f);
     
-    // verifica se a lista está vazia e inicializa as variaveis 'ultimo_id_cadastrado' e "empresa->num_funcionarios"
+    // verifica se a lista está vazia e inicializa as variaveis 'ultimo_id_funcionario' e "empresa->num_funcionarios"
     if(lst_vazia(f)) {
-        ultimo_id_cadastrado = 0;
+        ultimo_id_funcionario = 0;
         empresa->num_funcionarios = 0;
     } else {
         empresa->num_funcionarios = f->qtd_funcionarios;
-        ultimo_id_cadastrado = f->ultimo_id_cadastrado;
+        ultimo_id_funcionario = f->ultimo_id_cadastrado;
     }
 
     // pegando as informacoes dos cargos a partir do banco de dados
     empresa->c_list = cargo_cria();
     CargosList *c = empresa->c_list; 
     c = obter_cargos(c);
+
+    // verifica se a lista está vazia e inicializa as variaveis 'ultimo_id_funcionario' e "empresa->num_funcionarios"
+    if(cargo_lst_vazia(c)) {
+        ultimo_id_cargo = 0;
+        empresa->num_cargos = 0;
+    } else {
+        empresa->num_cargos = c->qtd_cargos;
+        ultimo_id_cargo = c->ultimo_id_cargo_adicionado;
+    }
 
     // OBS.: adicionar função que percorre o arquivo de cargos e adiciona os ponteiros ao funcinario
     adiciona_cargo_a_funcionario(c, f);
@@ -41,29 +51,32 @@ int main() {
         printf("4. Buscar funcionario\n");
         printf("5. Editar cadastro de funcionario\n");
         printf("6. Consultar receita da empresa\n");
-        printf("7. Consultar quantidade de funcionarios por cargo\n");
-        printf("8. Exibe as informacoes da empresa\n");
-        printf("9. Sair\n");
+        printf("7. Cadastrar cargo\n");
+        printf("8. Ecluir cargo\n");
+        printf("9. Listar cargos\n");
+        printf("10. Consultar quantidade de funcionarios por cargo\n");
+        printf("11. Exibe as informacoes da empresa\n");
+        printf("12. Sair\n");
         printf("Escolha uma opcao: ");
         
-        while (scanf("%d%c", &opcao, &char_invalido) != 2 || char_invalido != '\n' || opcao < 1 || opcao > 9) {
+        while (scanf("%d%c", &opcao, &char_invalido) != 2 || char_invalido != '\n' || opcao < 1 || opcao > 12) {
             printf("Opcao invalida. Digite novamente: ");
 
             // Limpa o buffer do teclado
             while (getchar() != '\n');
         }
         switch (opcao) {
-                case 1: // adiciona funcionário
-                    f = pedir_informacoes_funcionario(f, c, ultimo_id_cadastrado, &empresa->num_funcionarios);
-                    f->ultimo_id_cadastrado = ++ultimo_id_cadastrado;
+                case 1: // cadastra funcionário
+                    f = solicita_informacoes_funcionario(f, c, ultimo_id_funcionario, &empresa->num_funcionarios);
+                    f->ultimo_id_cadastrado = ++ultimo_id_funcionario;
                     printf("Funcionário cadastrado com sucesso!\n");
-                    printf("Funcionário de ID: %d\n", ultimo_id_cadastrado);
+                    printf("Funcionário de ID: %d\n", ultimo_id_funcionario);
                     printf("Quantidade de funcionários atualizado para %d\n", empresa->num_funcionarios);
                     break;
                 case 2: // exclui funcionário
                     printf("Digite o ID do funcionário que deseja excluir do sistema: ");
-                    scanf("%d", &id_busca_funcionario);
-                    f = lst_retira(f, id_busca_funcionario, &empresa->num_funcionarios);
+                    scanf("%d", &id_funcionario);
+                    f = lst_retira(f, id_funcionario, &empresa->num_funcionarios);
                     f->qtd_funcionarios = empresa->num_funcionarios;
                     break;
                 case 3: // imprime funcionários
@@ -72,32 +85,49 @@ int main() {
                     break;
                 case 4: // busca funcionário
                     printf("Digite o ID do funcionário que deseja buscar: ");
-                    scanf("%d",  &id_busca_funcionario);
+                    scanf("%d",  &id_funcionario);
                     
                     FuncionariosList* funcionario_buscado;
-                    funcionario_buscado = lst_busca(f, id_busca_funcionario);
+                    funcionario_buscado = lst_busca(f, id_funcionario);
 
                     if (funcionario_buscado != NULL){
                         lst_imprime_um_funcionario(funcionario_buscado);
                     } else {
-                        printf("Funcionário com o id %d não encontrado.\n", id_busca_funcionario);
+                        printf("Funcionário com o id %d não encontrado.\n", id_funcionario);
                     }
                     break;
                 case 5: // edita funcionário
                     printf("Digite o ID do funcionário que deseja buscar: ");
-                    scanf("%d",  &id_busca_funcionario);
-                    f = lst_edita(f, c, id_busca_funcionario); 
+                    scanf("%d",  &id_funcionario);
+                    f = lst_edita(f, c, id_funcionario); 
                     break;
                 case 6: // exibe receita da empresa
                     printf("Receita da empresa: R$ %.2f\n", empresa->receita);
                     break;
-                case 7: // consulta a quantidade de funcionários por cago
+                case 7: // cadastra cargo
+                    c = solicita_informacoes_cargo(c, ultimo_id_cargo, &empresa->num_cargos);
+                    c->ultimo_id_cargo_adicionado = ++ultimo_id_cargo;
+                    printf("Cargo cadastrado com sucesso!\n");
+                    printf("Cargo de ID: %d\n", ultimo_id_cargo);
+                    printf("Quantidade de cargos atualizado para %d\n", empresa->num_cargos);
+                    break;
+                case 8: // exclui cargo
+                    printf("Digite o ID do cargo que deseja excluir do sistema: ");
+                    scanf("%d", &id_cargo);
+                    c = cargo_retira(c, id_cargo, &empresa->num_cargos);
+                    c->qtd_cargos  = empresa->num_cargos;
+                    adiciona_cargo_a_funcionario(c, f);
+                    break;
+                case 9: // lista cargos
+                    cargo_imprime(c);
+                    break;
+                case 10: // consulta a quantidade de funcionários por cago
                     consulta_funcionarios_por_cargo(c);
                     break;
-                case 8: // exibe as informações da empresa
+                case 11: // exibe as informações da empresa
                     empresa_imprime(empresa);
                     break;
-                case 9: // sai do programa
+                case 12: // sai do programa
                     lst_libera(f);
                     cargo_libera(c);
                     free(empresa);
@@ -108,7 +138,7 @@ int main() {
                     printf("Opcao invalida!\n");
                     break;
             }
-    } while (opcao != 9);
+    } while (opcao != 12);
 
     return 0;
 }
@@ -121,12 +151,17 @@ void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list) 
         CargosList *cargo;
         for (funcionario = f_list; funcionario != NULL; funcionario = funcionario->next) {
             cargo = cargo_busca(c_list, funcionario->info.cargo_id);
-            funcionario->info.cargo =  cargo->info;
+
+            if (cargo != NULL) {
+                funcionario->info.cargo =  cargo->info;
+            } else {
+                funcionario->info.cargo =  NULL;
+            }
         }
     }    
 }
 
-FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list, int id, int *qtd_funcionarios) {
+FuncionariosList *solicita_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list, int id, int *qtd_funcionarios) {
     FuncionariosList *f = f_list;
     CargosList *cargo;
 
@@ -168,4 +203,19 @@ FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, Cargos
         f->info.cargo->qtd_funcionarios++;
     }   
     return f;
+}
+
+CargosList *solicita_informacoes_cargo(CargosList *c_list, int id, int *qtd_cargos) {
+    CargosList *novo_cargo = c_list;
+    char nome_cargo[TAM_NOME];
+    char setor[TAM_NOME];
+
+    printf("Digite o nome do cargo: ");
+    scanf(" %[^\n]", nome_cargo);
+    printf("Digite o nome do setor relacionado a este cargo: ");
+    scanf(" %[^\n]", setor);
+
+    novo_cargo = cargo_insere(novo_cargo, ++id, 0, nome_cargo, setor, qtd_cargos);
+
+    return novo_cargo;
 }

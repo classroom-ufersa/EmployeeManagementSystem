@@ -1,6 +1,6 @@
 #include "TAD_empresa/empresa.c"
 
-FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id);
+FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id, int *qtd_funcionarios);
 void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list);
 
 int main (void) {
@@ -29,15 +29,19 @@ int main (void) {
     CargosList *c = empresa->c_list; 
     c = obter_cargos(c);
 
-    // OBS.: adicionar função que percorre o arquivo de cargos e adiciona os ponteiros ao funcinario
-    adiciona_cargo_a_funcionario(c, f);
-
     // verificando se a tratativa de id e quantidade de funcionários estão corretas
     printf("o ultimo id cadastrado no sistema foi: %d\n", ultimo_id_cadastrado);
     printf("Quantidade atual de funcionarios cadastrados: %d\n", empresa->num_funcionarios);
 
+    // OBS.: adicionar função que percorre o arquivo de cargos e adiciona os ponteiros ao funcinario
+    adiciona_cargo_a_funcionario(c, f);
+
+    f = lst_retira(f, 1, &empresa->num_funcionarios);
+    f = lst_retira(f, 2, &empresa->num_funcionarios);
+
+    lst_atualiza_arquivo(f);
+
     lst_imprime(f);
-    f = lst_retira(f, 12, &empresa->num_funcionarios);
     return 0;
 } 
 
@@ -54,7 +58,7 @@ void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list) 
     }    
 }
 
-FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list, int id) {
+FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, CargosList *c_list, int id, int *qtd_funcionarios) {
     FuncionariosList *f = f_list;
     CargosList *cargo;
 
@@ -77,7 +81,7 @@ FuncionariosList *pedir_informacoes_funcionario(FuncionariosList *f_list, Cargos
         printf("Digite a jornada de trabalho do funcionario: ");
         scanf("%d", &jornada_de_trabalho);
         
-        f = lst_insere(f, nome, ++id, data, documento, salario, jornada_de_trabalho);
+        f = lst_insere(f, nome, ++id, data, documento, salario, jornada_de_trabalho, qtd_funcionarios);
 
         cargo_imprime(c_list);
 

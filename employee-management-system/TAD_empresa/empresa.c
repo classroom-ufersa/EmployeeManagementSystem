@@ -15,6 +15,7 @@ struct empresa {
     CargosList *c_list;
     FuncionariosList *f_list;
     int num_funcionarios;
+    int num_cargos;
 };
 
 Empresa *empresa_cria(char *CNPJ, char *nome, char *localizacao, float receita, float valor_de_mercado) {

@@ -171,7 +171,7 @@ FuncionariosList* lst_retira(FuncionariosList* f_list, int id, int *qtd_funciona
     free(p);
 
     printf("O funcionário de ID %d foi excluído do sistema.\n", id);
-    printf("Quantidade de funcionários atualizado para %d\n", *qtd_funcionarios_ptr);
+    printf("Quantidade de funcionários atualizado para %d.\n", *qtd_funcionarios_ptr);
     return f_list;
 }
 
@@ -188,7 +188,7 @@ void lst_libera(FuncionariosList* f_list) {
     }
 }
 
-void atualiza_arquivo(FuncionariosList* f_list) {
+void lst_atualiza_arquivo(FuncionariosList* f_list) {
     FuncionariosList* p; /* variável auxiliar para percorrer a lista */
     FILE *arquivo;
     arquivo = fopen("TAD_funcionario/dados_funcionarios.txt", "w"); // Abre o arquivo para escrita
@@ -198,11 +198,15 @@ void atualiza_arquivo(FuncionariosList* f_list) {
         exit(1);
     }   
     for (p = f_list; p != NULL; p = p->next) {
-        fprintf(arquivo, "%s;%d;", p->info.name, p->info.id); // imprime o nome e o id do funcionario no banco de dados
-        fprintf(arquivo, "%d/", p->info.data_de_contratacao->dia); // imprime a Data no banco de dados
+        fprintf(arquivo, "%s;", p->info.name); // nome
+        fprintf(arquivo, "%d;", p->info.id); // id
+        fprintf(arquivo, "%d/", p->info.data_de_contratacao->dia); // data
         fprintf(arquivo, "%d/", p->info.data_de_contratacao->mes);
         fprintf(arquivo, "%d;", p->info.data_de_contratacao->ano);
-        fprintf(arquivo, "%s\n", p->info.cpf_rg.CPF); // imprime Documento no banco de dados
+        fprintf(arquivo, "%s;", p->info.cpf_rg.CPF); // documento
+        fprintf(arquivo, "%.2f;", p->info.salario); // salario
+        fprintf(arquivo, "%d;", p->info.jornada_trabalho); // jornada de trabalho
+        fprintf(arquivo, "%d\n", p->info.cargo_id); // id do cargo
     }
     
     fclose(arquivo); // Fecha o arquivo

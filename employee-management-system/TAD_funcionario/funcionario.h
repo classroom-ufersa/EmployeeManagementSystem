@@ -41,7 +41,7 @@ void lst_imprime(FuncionariosList* f_list);
 int lst_vazia(FuncionariosList* f_list);
 
 // Função atualiza arquivo: resgata informações do banco de dados
-void atualiza_arquivo(FuncionariosList* f_list);
+void lst_atualiza_arquivo(FuncionariosList* f_list);
 
 // Função que troca os valores de dois nós
 void swapNodes(FuncionariosList *f_list_1, FuncionariosList *f_list_2);

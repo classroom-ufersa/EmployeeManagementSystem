@@ -14,6 +14,8 @@ struct cargo {
 
 struct cargoslist {
     Cargo *info;
+    int ultimo_id_cargo_adicionado;
+    int qtd_cargos;
     struct cargoslist *next;
     struct cargoslist *prev;
 };
@@ -22,7 +24,7 @@ CargosList* cargo_cria(void) {
     return NULL;
 }
 
-CargosList* cargo_insere(CargosList* c_list, int ID, int qtd_funcionarios, char *nome_cargo, char *setor) {
+CargosList* cargo_insere(CargosList* c_list, int ID, int qtd_funcionarios, char *nome_cargo, char *setor, int *qtd_cargos) {
     Cargo *cargo = (Cargo*) malloc(sizeof(Cargo));
     CargosList *novo = (CargosList*) malloc(sizeof(CargosList));   
 
@@ -33,7 +35,7 @@ CargosList* cargo_insere(CargosList* c_list, int ID, int qtd_funcionarios, char 
     strcpy(cargo->setor, setor);
 
     novo->info = cargo;
-
+    novo->qtd_cargos = ++(*qtd_cargos);
     // adicionando de fato o nó na lista
     novo->next = c_list;
     novo->prev = NULL;
@@ -49,7 +51,7 @@ CargosList* obter_cargos(CargosList *c_list) {
     FILE *arquivo_origem;
     CargosList *new_list = c_list;
     char linha[TAM_LINHA], nome_cargo[TAM_NOME], setor[TAM_NOME];
-    int ID, qtd_funcionarios;
+    int ID, qtd_funcionarios, qtd_cargos = 0,  maior_id = 0;
 
     // lendo arquivo com as informacoes dos funcionarios
     arquivo_origem = fopen("TAD_cargo/dados_cargos.txt", "r"); // abre o arquivo_origem para leitura
@@ -59,7 +61,12 @@ CargosList* obter_cargos(CargosList *c_list) {
     }
     while (fgets(linha, TAM_LINHA, arquivo_origem) != NULL) { 
         sscanf(linha, "%d;%[^;];%[^;];%d", &ID, nome_cargo, setor, &qtd_funcionarios); 
-        new_list = cargo_insere(new_list, ID, qtd_funcionarios, nome_cargo, setor);
+        new_list = cargo_insere(new_list, ID, qtd_funcionarios, nome_cargo, setor, &qtd_cargos);
+    
+        if (ID > maior_id)
+            maior_id = ID;
+            
+        new_list->ultimo_id_cargo_adicionado = maior_id;
     }
 
     fclose(arquivo_origem); // fecha o arquivo
@@ -78,7 +85,7 @@ void cargo_imprime(CargosList *c_list) {
         printf("Nenhum cargo encontrado no Sistema!\n");
     } else{
         CargosList* c;
-        printf("------------LISTA DE CARGOS------------\n");
+        printf("\n------------LISTA DE CARGOS------------\n");
         for (c = c_list; c != NULL; c = c->next) {
             printf("Cargo: %s\n", c->info->nome_cargo);    
             printf("ID: %d\n", c->info->ID);
@@ -103,7 +110,7 @@ CargosList* cargo_busca(CargosList* c_list, int ID) {
     return NULL; // não achou o elemento buscado     
 }
 
-CargosList* cargo_retira(CargosList* c_list, int ID) {
+CargosList* cargo_retira(CargosList* c_list, int ID, int *qtd_cargos) {
     CargosList* p = cargo_busca(c_list, ID);
 
     // verifica se achou elemento
@@ -121,9 +128,12 @@ CargosList* cargo_retira(CargosList* c_list, int ID) {
     if (p->next != NULL) // testa se é o último elemento
         p->next->prev = p->prev; 
     
+    (*qtd_cargos)--; // atualiza a quantidade de cargos
     free(p->info);
     free(p);
-    // atualiza_arquivo(c_list);
+
+    printf("O cargo de ID %d foi excluído do sistema.\n", ID);
+    printf("Quantidade de cargos atualizado para %d.\n", *qtd_cargos);
     return c_list;
 }
 
