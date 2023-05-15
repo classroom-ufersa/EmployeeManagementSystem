@@ -115,7 +115,7 @@ CargosList* cargo_retira(CargosList* c_list, int ID, int *qtd_cargos) {
 
     // verifica se achou elemento
     if (p == NULL) {
-        printf("Cargo com ID %d não encontrado no sistema. Por favor, tente novamente.\n", ID);
+        printf("Cargo com ID %d não encontrado no sistema. Por favor, tente novamente.\n\n", ID);
         return c_list; 
     }
 
@@ -133,7 +133,7 @@ CargosList* cargo_retira(CargosList* c_list, int ID, int *qtd_cargos) {
     free(p);
 
     printf("O cargo de ID %d foi excluído do sistema.\n", ID);
-    printf("Quantidade de cargos atualizado para %d.\n", *qtd_cargos);
+    printf("Quantidade de cargos atualizado para %d.\n\n", *qtd_cargos);
     return c_list;
 }
 
@@ -173,7 +173,7 @@ void consulta_funcionarios_por_cargo(CargosList *c_list){
     if (cargo_lst_vazia(c_list)) {
         printf("Nenhum cargo encontrado no Sistema!\n");
     } else{
-        printf("------------QUANTIDADE DE FUNCIONARIOS POR CARGO------------\n");
+        printf("\n------------QUANTIDADE DE FUNCIONARIOS POR CARGO------------\n");
         for (cargos = c_list; cargos != NULL; cargos = cargos->next) {
             printf("Cargo: %s\n", cargos->info->nome_cargo);    
             printf("Quantidade de funcionarios: %d\n\n", cargos->info->qtd_funcionarios); 

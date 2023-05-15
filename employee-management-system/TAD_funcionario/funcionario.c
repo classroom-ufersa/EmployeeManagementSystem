@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../TAD_utilidades/data.c"
-#include "../TAD_cargo/cargo.c"
 #include "funcionario.h"
 #define TAM_LINHA 200
 #define TAM_NOME 50
@@ -15,7 +13,7 @@ union documento {
 struct funcionario {
     Documento cpf_rg;
     Data *data_de_contratacao;
-    char name[50];
+    char name[TAM_NOME];
     int id;
     Cargo *cargo;
     float salario;
@@ -62,7 +60,7 @@ float salario, int jornada_trabalho, int *qtd_funcionarios) {
 FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
     FILE *arquivo_origem;
     FuncionariosList *new_list = f_list;
-    char linha[TAM_LINHA], nome[50], documento[20];
+    char linha[TAM_LINHA], nome[TAM_NOME], documento[20];
     int id, dia, mes , ano, cargo_id = 0, maior_id = 0, qtd_funcionarios = 0;
     float salario;
     int jornada_trabalho;
@@ -95,7 +93,7 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         if (id > maior_id)
             maior_id = id;
         
-        new_list->ultimo_id_cadastrado = maior_id;
+        new_list->ultimo_id_cadastrado = maior_id; // aloca o id (o maior atual), o último id alocado ao último nó será o maior do arquivo
     }
 
     fclose(arquivo_origem); // fecha o arquivo
@@ -171,7 +169,7 @@ FuncionariosList* lst_retira(FuncionariosList* f_list, int id, int *qtd_funciona
     free(p);
 
     printf("O funcionário de ID %d foi excluído do sistema.\n", id);
-    printf("Quantidade de funcionários atualizado para %d.\n", *qtd_funcionarios_ptr);
+    printf("Quantidade de funcionários atualizado para %d.\n\n", *qtd_funcionarios_ptr);
     return f_list;
 }
 
@@ -260,10 +258,16 @@ FuncionariosList *lst_edita(FuncionariosList *f_list, CargosList *c_list, int id
             }
             printf("Deseja editar o cargo (s/n)? ");
             scanf(" %c", &resposta);
-            if (resposta == 's') {
+            if (cargo_lst_vazia(c_list)) {
+                printf("Erro! Lista de cargos vazia.");
+                printf("Primeiro crie algum cargo antes de adicinar Funcinarios.\n");
+                
+            } else if(resposta == 's') {
                 // Edita o cargo
                 int cargo_id;
                 CargosList *cargo;
+
+                cargo_imprime(c_list);
                 printf("Digite o ID do novo cargo: ");
                 scanf("%d", &cargo_id);
                 cargo = cargo_busca(c_list, cargo_id);
@@ -274,7 +278,10 @@ FuncionariosList *lst_edita(FuncionariosList *f_list, CargosList *c_list, int id
                     scanf("%d", &cargo_id);
                     cargo = cargo_busca(c_list, cargo_id);
                 }
-                p->info.cargo->qtd_funcionarios--; // Diminui a quantidade de funcionários no cargo anterior
+
+                if (p->info.cargo != NULL)
+                    p->info.cargo->qtd_funcionarios--; // Diminui a quantidade de funcionários no cargo anterior
+            
                 p->info.cargo = cargo->info;
                 p->info.cargo_id = cargo->info->ID;
                 p->info.cargo->qtd_funcionarios++; // Aumenta a quantidade de funcionários no cargo atual

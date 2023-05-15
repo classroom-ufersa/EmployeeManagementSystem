@@ -3,6 +3,9 @@
 #ifndef FUNCIONARIO_H
 #define FUNCIONARIO_H
 
+#include "../TAD_utilidades/data.c"
+#include "../TAD_cargo/cargo.c"
+
 // --- TIPOS ESTRUTURADOS ---
 // Struct do tipo union para o Documento (RG/CPF)
 typedef union documento Documento;

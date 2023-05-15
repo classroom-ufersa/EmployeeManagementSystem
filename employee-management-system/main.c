@@ -1,7 +1,7 @@
 #include "TAD_empresa/empresa.c"
 
 FuncionariosList *solicita_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id, int *qtd_funcionarios);
-CargosList *solicita_informacoes_cargo(CargosList *c_list, int id, int *qtd_cargos);
+
 void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list);
 
 int main() {
@@ -71,7 +71,7 @@ int main() {
                     f->ultimo_id_cadastrado = ++ultimo_id_funcionario;
                     printf("Funcionário cadastrado com sucesso!\n");
                     printf("Funcionário de ID: %d\n", ultimo_id_funcionario);
-                    printf("Quantidade de funcionários atualizado para %d\n", empresa->num_funcionarios);
+                    printf("Quantidade de funcionários atualizado para %d\n\n", empresa->num_funcionarios);
                     break;
                 case 2: // exclui funcionário
                     printf("Digite o ID do funcionário que deseja excluir do sistema: ");
@@ -109,7 +109,7 @@ int main() {
                     c->ultimo_id_cargo_adicionado = ++ultimo_id_cargo;
                     printf("Cargo cadastrado com sucesso!\n");
                     printf("Cargo de ID: %d\n", ultimo_id_cargo);
-                    printf("Quantidade de cargos atualizado para %d\n", empresa->num_cargos);
+                    printf("Quantidade de cargos atualizado para %d\n\n", empresa->num_cargos);
                     break;
                 case 8: // exclui cargo
                     printf("Digite o ID do cargo que deseja excluir do sistema: ");
@@ -205,17 +205,3 @@ FuncionariosList *solicita_informacoes_funcionario(FuncionariosList *f_list, Car
     return f;
 }
 
-CargosList *solicita_informacoes_cargo(CargosList *c_list, int id, int *qtd_cargos) {
-    CargosList *novo_cargo = c_list;
-    char nome_cargo[TAM_NOME];
-    char setor[TAM_NOME];
-
-    printf("Digite o nome do cargo: ");
-    scanf(" %[^\n]", nome_cargo);
-    printf("Digite o nome do setor relacionado a este cargo: ");
-    scanf(" %[^\n]", setor);
-
-    novo_cargo = cargo_insere(novo_cargo, ++id, 0, nome_cargo, setor, qtd_cargos);
-
-    return novo_cargo;
-}

@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include "empresa.h" 
-//#include "../TAD_cargo/cargo.c"
-#include "../TAD_funcionario/funcionario.c"
 #define TAM_LINHA 200
 #define TAM_NOME 50
 
 struct empresa {
-    char CNPJ[15];
+    char CNPJ[20];
     char nome[TAM_NOME];
     char localizacao[100];
     float receita;
@@ -33,7 +31,7 @@ Empresa *empresa_cria(char *CNPJ, char *nome, char *localizacao, float receita, 
 Empresa *empresa_obter() {
     Empresa *empresa_arquivo;
     FILE *arquivo_origem;
-    char linha[TAM_LINHA], CNPJ[15], nome_da_empresa[TAM_NOME], localizacao[100];
+    char linha[TAM_LINHA], CNPJ[20], nome_da_empresa[TAM_NOME], localizacao[100];
     float receita, valor_de_mercado;
 
     // lendo arquivo com as informacoes da empresa
@@ -56,7 +54,23 @@ void empresa_imprime(Empresa *empresa) {
     printf("\n-------------INFORMAÇÕES DA EMPRESA-------------\n");
     printf("Nome da empresa: %s\n", empresa->nome);
     printf("CNPJ: %s\n", empresa->CNPJ);
+    printf("Quantidade de funcionarios: %d\n", empresa->num_funcionarios);
     printf("Localização: %s\n", empresa->localizacao);
     printf("Receita: R$%.2f\n", empresa->receita);
-    printf("Valor de mercado: R$%.2f\n", empresa->valor_de_mercado);
+    printf("Valor de mercado: R$%.2f\n\n", empresa->valor_de_mercado);
+}
+
+CargosList *solicita_informacoes_cargo(CargosList *c_list, int id, int *qtd_cargos) {
+    CargosList *novo_cargo = c_list;
+    char nome_cargo[TAM_NOME];
+    char setor[TAM_NOME];
+
+    printf("Digite o nome do cargo: ");
+    scanf(" %[^\n]", nome_cargo);
+    printf("Digite o nome do setor relacionado a este cargo: ");
+    scanf(" %[^\n]", setor);
+
+    novo_cargo = cargo_insere(novo_cargo, ++id, 0, nome_cargo, setor, qtd_cargos);
+
+    return novo_cargo;
 }
