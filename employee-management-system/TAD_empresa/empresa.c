@@ -161,7 +161,7 @@ Empresa* empresa_start() {
 
 void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list) {
     if (cargo_lst_vazia(c_list) || lst_vazia(f_list)) {
-        printf("Parece que você tem arquivos vazios, tente adicionar cargos e funcionários para começar!\n");
+        printf("PARECE QUE VOCÊ TEM ARQUIVOS VAZIOS, TENTE ADICIONAR CARGOS E FUNCIONÁRIOS PARA COMEÇAR!\n\n");
     } else {
         FuncionariosList *funcionario;
         CargosList *cargo;

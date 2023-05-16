@@ -77,7 +77,7 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
         printf("Arquivo 'dados_funcionarios.txt' está vazio.\n");
         return NULL;
     }else{
-        rewind(arquivo_origem); // recoloca o cursos no inicio do arquivo
+        rewind(arquivo_origem); // recoloca o cursor no inicio do arquivo
     }
 
     while (fgets(linha, TAM_LINHA, arquivo_origem) != NULL) { 
@@ -103,7 +103,7 @@ FuncionariosList*  obter_funcionarios(FuncionariosList *f_list){
 void lst_imprime(FuncionariosList* f_list) {
     if (lst_vazia(f_list)) {
         printf("Nenhum funcionário encontrado no Sistema!\n");
-        printf("Por favor, tente adicionar algum funcionário antes de exibi-los.\n");
+        printf("Por favor, tente adicionar algum funcionário antes de exibi-los.\n\n");
     } else{
         FuncionariosList* p;
         printf("\n------------LISTA DE FUNCIONARIOS------------\n");
@@ -194,7 +194,8 @@ void lst_atualiza_arquivo(FuncionariosList* f_list) {
     if (arquivo == NULL) {
         printf("Erro ao abrir o arquivo!\n");
         exit(1);
-    }   
+    }
+    lst_ordena(f_list);   
     for (p = f_list; p != NULL; p = p->next) {
         fprintf(arquivo, "%s;", p->info.name); // nome
         fprintf(arquivo, "%d;", p->info.id); // id
@@ -208,7 +209,7 @@ void lst_atualiza_arquivo(FuncionariosList* f_list) {
     }
     
     fclose(arquivo); // Fecha o arquivo
-    printf("Arquivo atualizado!\n");
+    printf("Arquivo funcionarios atualizado com sucesso!\n");
 }
 
 void swapNodes(FuncionariosList *f_list_1, FuncionariosList *f_list_2) {
@@ -220,16 +221,11 @@ void swapNodes(FuncionariosList *f_list_1, FuncionariosList *f_list_2) {
 void lst_ordena(FuncionariosList *f_list) {
     FuncionariosList *i;
     FuncionariosList *j;
-    if (lst_vazia(f_list)) {
-        printf("ERRO: lista vazia!\n");
-        exit(1);
-    } else {
-        // ordena os nomes usando bubble sort
-        for (i = f_list; i != NULL; i = i->next) {
-            for (j = i->next; j != NULL; j = j->next) {
-                if (strcmp(i->info.name, j->info.name) > 0) {
-                    swapNodes(i, j);
-                }
+    // ordena os nomes usando bubble sort
+    for (i = f_list; i != NULL; i = i->next) {
+        for (j = i->next; j != NULL; j = j->next) {
+            if (strcmp(i->info.name, j->info.name) > 0) {
+                swapNodes(i, j);
             }
         }
     }
@@ -298,7 +294,7 @@ FuncionariosList *lst_edita(FuncionariosList *f_list, CargosList *c_list, int id
                 printf("Digite a nova jornada de trabalho: ");
                 scanf("%d", &p->info.jornada_trabalho);
             }
-            printf("Funcionário atualizado com sucesso!\n");
+            printf("Funcionário atualizado com sucesso!\n\n");
     }
 
     return f_list;

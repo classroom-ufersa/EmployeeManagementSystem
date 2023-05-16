@@ -41,7 +41,6 @@ int main() {
                     printf("Digite o ID do funcionário que deseja excluir do sistema: ");
                     scanf("%d", &id_funcionario);
                     f_list = lst_retira(f_list, id_funcionario, &empresa->num_funcionarios);
-                    f_list->qtd_funcionarios = empresa->num_funcionarios;
                     break;
                 case 3: // imprime funcionários
                     lst_ordena(f_list);
@@ -57,7 +56,7 @@ int main() {
                     if (funcionario_buscado != NULL){
                         lst_imprime_um_funcionario(funcionario_buscado);
                     } else {
-                        printf("Funcionário com o id %d não encontrado.\n", id_funcionario);
+                        printf("Funcionário com o id %d não encontrado.\n\n", id_funcionario);
                     }
                     break;
                 case 5: // edita funcionário
@@ -79,7 +78,6 @@ int main() {
                     printf("Digite o ID do cargo que deseja excluir do sistema: ");
                     scanf("%d", &id_cargo);
                     c_list = cargo_retira(c_list, id_cargo, &empresa->num_cargos);
-                    c_list->qtd_cargos = empresa->num_cargos;
                     adiciona_cargo_a_funcionario(c_list, f_list);
                     break;
                 case 9: // lista cargos
@@ -92,6 +90,8 @@ int main() {
                     empresa_imprime(empresa);
                     break;
                 case 12: // sai do programa
+                    lst_atualiza_arquivo(f_list);
+                    cargo_atualiza_arquivo(c_list);
                     lst_libera(f_list);
                     cargo_libera(c_list);
                     free(empresa);

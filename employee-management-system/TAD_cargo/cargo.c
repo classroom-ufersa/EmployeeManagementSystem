@@ -59,6 +59,15 @@ CargosList* obter_cargos(CargosList *c_list) {
         printf("Erro ao abrir o arquivo.\n");
         exit(1);
     }
+
+    fseek(arquivo_origem, 0, SEEK_END); // posiciona o cursor no final do arquivo
+    if (ftell(arquivo_origem) == 0) { // verifica a posição atual do cursor
+        printf("Arquivo 'dados_cargos.txt' está vazio.\n");
+        return NULL;
+    }else{
+        rewind(arquivo_origem); // recoloca o cursor no inicio do arquivo
+    }
+
     while (fgets(linha, TAM_LINHA, arquivo_origem) != NULL) { 
         sscanf(linha, "%d;%[^;];%[^;];%d", &ID, nome_cargo, setor, &qtd_funcionarios); 
         new_list = cargo_insere(new_list, ID, qtd_funcionarios, nome_cargo, setor, &qtd_cargos);
@@ -165,7 +174,7 @@ void cargo_atualiza_arquivo(CargosList* c_list) {
     }
     
     fclose(arquivo); // Fecha o arquivo
-    printf("Arquivo atualizado!\n");
+    printf("Arquivo cargos atualizado ccom sucesso!\n");
 }
 
 void consulta_funcionarios_por_cargo(CargosList *c_list){
