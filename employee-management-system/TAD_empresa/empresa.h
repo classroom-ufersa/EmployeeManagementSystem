@@ -20,4 +20,13 @@ void empresa_imprime(Empresa *empresa);
 // Solicita ao usuário as informações necessárias para preencher o cadastro de um cargo
 CargosList *solicita_informacoes_cargo(CargosList *c_list, int id, int *qtd_cargos);
 
+// Solicita ao usuário as informações necessárias para preencher o cadastro de um funcionario
+FuncionariosList *solicita_informacoes_funcionario(FuncionariosList *f, CargosList *c_list, int id, int *qtd_funcionarios);
+
+// Inicializa a empresa, com todas as informações necessárias
+Empresa* empresa_start();
+
+// Atribui os cargos a cada funcionário
+void adiciona_cargo_a_funcionario(CargosList *c_list, FuncionariosList *f_list);
+
 #endif

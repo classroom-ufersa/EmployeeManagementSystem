@@ -150,7 +150,7 @@ FuncionariosList* lst_retira(FuncionariosList* f_list, int id, int *qtd_funciona
 
     // verifica se achou elemento
     if (p == NULL) {
-        printf("Funcionário com ID %d não foi encontrado no sistema. Por favor, tente novamente.\n", id);
+        printf("Funcionário com ID %d não foi encontrado no sistema. Por favor, tente novamente.\n\n", id);
         return f_list; 
     }
 
