@@ -1,7 +1,7 @@
 # Gerenciamento de Funcionários
 
 Olá, bem-vindo(a) ao nosso repositório GitHub do programa de **gerenciamento de funcionários**!
-O objetivo deste programa é facilitar a gestão de funcionários em uma empresa, permitindo o:
+O objetivo deste programa é facilitar a gestão de funcionários em uma empresa, permitindo-o:
 
     Cadastro
     Exclusão
@@ -39,16 +39,20 @@ Por fim, a funcionalidade mais importante do programa é a capacidade de exibir 
 - Linguagem C
 - Conceito de alocação dinâmica
 - Armazenamento de dados em arquivos
-- Listas encadeadas
 - Códigos de ordenação
+- Listas encadeadas
+
+<div align ="center">
+    <img src="employee-management-system/lista_duplamente_encadeada.png" />
+</div>
 
 ## Desenvolvedor
-[Davison Eryc de Moura Silva](https://github.com/dayvisonmsilva)
+[Dayvison Eryc de Moura Silva](https://github.com/dayvisonmsilva)
 
 ## Conclusão
 Em resumo, nosso programa de gerenciamento de funcionários é uma ferramenta poderosa para ajudar as empresas a manterem um controle mais eficiente e preciso sobre seus colaboradores. Com suas funcionalidades intuitivas e práticas, é possível manter um registro atualizado de todas as informações necessárias, facilitando a tomada de decisões e garantindo um ambiente de trabalho mais organizado e produtivo.
 
 #### Projeto para a disciplina ALGORITMOS E ESTRUTURAS DE DADOS I
 + [Professoara Rosana Cibely Batista Rego](https://github.com/roscibely)
-+ [Repositorio dos projetos](https://github.com/classroom-ufersa) 
++ [Repositório dos projetos](https://github.com/classroom-ufersa) 
 + Ano 2023
